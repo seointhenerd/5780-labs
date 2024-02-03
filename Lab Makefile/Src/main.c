@@ -69,73 +69,10 @@ void SystemClock_Config(void);
 
 /* USER CODE END 0 */
 
-// int main(void)
-// {
-//   SystemClock_Config();
-
-//   RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-//   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-
-//   uint32_t position = 0x00U;
-//   uint32_t iocurrent = 0x00U;
-//   uint32_t temp = 0x00U;
-
-//   // Mode for PC6-PC9 and PA0
-//   GPIOC->MODER &= ~(1 << 13);
-//   GPIOC->MODER |= (1 << 12);
-//   GPIOC->MODER |= (1 << 14);
-//   GPIOC->MODER &= ~(1 << 15);
-//   GPIOA->MODER &= ~(1 << 1);
-//   GPIOA->MODER &= ~(1 << 0);
-
-
-//   // Type for PC6-PC9 and PA0
-//   GPIOC->OTYPER &= ~(1 << 6);
-//   GPIOC->OTYPER &= ~(1 << 7);
-
-//   GPIOC->OSPEEDR &= ~(1 << 12);
-//   GPIOC->OSPEEDR &= ~(1 << 13);
-//   GPIOC->OSPEEDR &= ~(1 << 14);
-//   GPIOC->OSPEEDR &= ~(1 << 15);
-//   GPIOA->OSPEEDR &= ~(1 << 0);
-
-//   GPIOC->PUPDR &= ~(1 << 12);
-//   GPIOC->PUPDR &= ~(1 << 13);
-//   GPIOC->PUPDR &= ~(1 << 14);
-//   GPIOC->PUPDR &= ~(1 << 15);
-//   GPIOA->PUPDR |= (1 << 1);
-//   GPIOA->PUPDR &= ~(1 << 0);
-
-//   GPIOC->ODR |= (1 << 6);
-//   GPIOC->ODR &= ~(1<<7);
-
-//   uint32_t debouncer  = 0;
-
-//   while (1)
-//   {
-//     debouncer = (debouncer  << 1);
-
-//     if(GPIOA->IDR & 1){
-//       debouncer |= 0x01;
-//     }
-//     if(debouncer == 0xFFFFFFFF){
-//       if(GPIOA->IDR & 1){
-//         HAL_Delay(100);
-//         GPIOC->ODR ^= ((1 << 6) | (1<<7));
-//       }
-//     }
-//   }
-
-// }
-
 int main(void) 
 {
   HAL_Init(); // Reset of all peripherals, init the Flash and Systick
   SystemClock_Config(); //Configure the system clock
-
-  /* This example uses HAL library calls to control
-  the GPIOC peripheral. You’ll be redoing this code
-  with hardware register access. */
 
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
   RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
@@ -170,28 +107,30 @@ int main(void)
   while (1) {
     debouncer = (debouncer << 1);
 
-    // // Toggle the output state of red and blue
-    // GPIOC->ODR |= (1 << 6);
-    // HAL_Delay(120); // Delay 120ms
-    // GPIOC->ODR &= ~(1 << 6);
-    // HAL_Delay(120); // Delay 120ms
-    // GPIOC->ODR |= (1 << 7);
-    // HAL_Delay(120); // Delay 120ms
-    // GPIOC->ODR &= ~(1 << 7);
-    // HAL_Delay(120); // Delay 120ms
+    // CHECKOFF 1 - BLINKING LED
+    GPIOC->ODR |= (1 << 6);
+    HAL_Delay(120); // Delay 120ms
+    GPIOC->ODR &= ~(1 << 6);
+    HAL_Delay(120); // Delay 120ms
+    GPIOC->ODR |= (1 << 7);
+    HAL_Delay(120); // Delay 120ms
+    GPIOC->ODR &= ~(1 << 7);
+    HAL_Delay(120); // Delay 120ms
 
-    // if (GPIOA->IDR & 1)
-    // {
-    //   GPIOC->ODR |= (1 << 8);
-    // }
+    if (GPIOA->IDR & 1)
+    {
+      GPIOC->ODR |= (1 << 8);
+    }
 
+    // CHECKOFF 2 - BUTTON AND LED
+    // A USER button triggers toggling.
     if (GPIOA->IDR & 1) 
     {
       debouncer |= 0x01;
     }
 
-    // This code triggers repeatedly when button is steady high!
-    if (debouncer == 0xFFFFFFFF) 
+    // This code triggers when button is steady high!
+    if (debouncer == 0x7FFFFFFF) 
     {
       GPIOC->ODR ^= ((1 << 6) | (1 << 7));
     }
@@ -219,7 +158,7 @@ void SystemClock_Config(void)
 
     /**Initializes the CPU, AHB and APB busses clocks
     */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+  RCC_ClkInitStruct.ClockType =   |RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
