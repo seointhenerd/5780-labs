@@ -53,3 +53,7 @@ dkms.conf
 
 # etc
 .DS_Store
+/lab5/Lab Makefile/build
+/.vscode
+/lab5/Lab Makefile/.mxproject
+.DS_Store
