@@ -1,7 +1,7 @@
 /**
   *
-  * Brandon Mouser
-  * U0962682
+  * Seoin Kim
+  * u1324614
   *
   ******************************************************************************
   * File Name          : main.c
@@ -44,6 +44,7 @@
 #include "main.h"
 #include "stm32f0xx_hal.h"
 #include "stm32f072xb.h"
+#include <stdbool.h>
 void _Error_Handler(char * file, int line);
 
 /* USER CODE BEGIN Includes */
@@ -63,23 +64,11 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
-/* USER CODE END PFP */
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-int main(void) 
+void InitialSetup()
 {
-  HAL_Init(); // Reset of all peripherals, init the Flash and Systick
-  SystemClock_Config(); //Configure the system clock
-
-  /* 5.2 Setting the GPIO modes */
   // Enable GPIOB and GPIOC in the RCC.
   RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-  
   // Enable I2C2 in the RCC.
   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
 
@@ -89,7 +78,11 @@ int main(void)
                               GPIO_SPEED_FREQ_LOW,
                               GPIO_NOPULL};
   HAL_GPIO_Init(GPIOC, &initStr);
+}
 
+void SetGPIOModes()
+{
+  /* 5.2 Setting the GPIO modes */
   // Set PB11.
   // Alternate Function mode
   GPIOB->MODER |= GPIO_MODER_MODER11_1;
@@ -128,7 +121,10 @@ int main(void)
 
   // Set PB15.
   GPIOB->MODER &= ~(GPIO_MODER_MODER15_1 | GPIO_MODER_MODER15_0);
+}
 
+void SetI2CPeripheral()
+{
   /* 5.3 Initializing the I2C Peripheral */
   // Set the parameters in the TIMINGR register to use 100 kHz standard-mode I2C.
   I2C2->TIMINGR |= (1 << 28);     // PRESC
@@ -139,69 +135,128 @@ int main(void)
 
   // Enable the I2C peripheral using the PE bit in the CR1 register.
   I2C2->CR1 |= I2C_CR1_PE;
+}
 
-  /* 5.4 Reading the Register */
-  I2C2->CR2 &= ~((0x7F << 16) | (0x3FF << 0));
+void SetI2CReadOrWrite(unsigned int num_of_data_byte, bool read)
+{
+  /* 5.4 Reading the Register (Part of it)*/ 
   // Set the transaction parameters in the CR2 register. (Do not set the AUTOEND bit.)
-    // 1. Set the slave address in the SADD[7:1] bit field.
-    I2C2->CR2 |= (0x69 << 1);
-    // 2. Set the number of data byte to be transmitted in the NBYTES[7:0] bit field.
-    I2C2->CR2 |= (1 << 16);
-    // 3. Configure the RD_WRN to indicate a read/write operation.
-    I2C2->CR2 &= ~I2C_CR2_RD_WRN;
-    // 4. Setting the START bit to begin the address frame.
-    I2C2->CR2 |= I2C_CR2_START;
-
-  // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
-  while (!(I2C2->ISR & I2C_ISR_TXIS))
-  {
-    if (I2C2->ISR & I2C_ISR_NACKF)
-    {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  } 
-
-
-  // Write the address of the “WHO_AM_I” register into the I2C transmit register. (TXDR)
-  I2C2->TXDR |= (0x0F << 0);
-
-  // Wait until the TC (Transfer Complete) flag is set.
-  while (!(I2C2->ISR & I2C_ISR_TC));
-
-  // Clear the bits.
+  // Clear the NBYTES and SADD bit fields.
+  // The NBYTES field begins at bit 16, and the SADD at bit 0.
   I2C2->CR2 &= ~((0x7F << 16) | (0x3FF << 0));
-
   // 1. Set the slave address in the SADD[7:1] bit field.
   I2C2->CR2 |= (0x69 << 1);
+
   // 2. Set the number of data byte to be transmitted in the NBYTES[7:0] bit field.
-  I2C2->CR2 |= (1 << 16);
+  if (num_of_data_byte == 1) 
+    I2C2->CR2 |= (1 << 16);
+  else if (num_of_data_byte == 2)
+    I2C2->CR2 |= (1 << 17);
 
-  // Reload the CR2 register with the same parameters as before.
-  // Set the RD_WRN bit to indicate a read operation & set the START bit again.
-  I2C2->CR2 |= I2C_CR2_RD_WRN;
-  I2C2->CR2 |= I2C_CR2_START;
+  // 3. Configure the RD_WRN to indicate a read/write operation.
+  // 4. Setting the START bit to begin the address frame.
+  if (read) {
+    I2C2->CR2 |= I2C_CR2_RD_WRN;
+    I2C2->CR2 |= I2C_CR2_START;
 
-  // Wait until either of the RXNE (Receive Register Not Empty) or NACKF (Slave Not-Acknowledge) flags are set.
-  while (!(I2C2->ISR & I2C_ISR_RXNE))
+    // Wait until either of the RXNE (Receive Register Not Empty) or NACKF (Slave Not-Acknowledge) flags are set.
+    while (!(I2C2->ISR & I2C_ISR_RXNE)) {
+      // The NACKF flag should not be set.
+      if (I2C2->ISR & I2C_ISR_NACKF) {
+        // Turn the LED on when the flag is set.
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+      }
+    } 
+    // Wait until the TC (Transfer Complete) flag is set.
+    while (!(I2C2->ISR & I2C_ISR_TC));
+  }
+  else // write transfer
   {
-    if (I2C2->ISR & I2C_ISR_NACKF)
-    {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  } 
+    I2C2->CR2 &= ~I2C_CR2_RD_WRN;
+    I2C2->CR2 |= I2C_CR2_START;
 
+    // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
+    while (!(I2C2->ISR & I2C_ISR_TXIS)) {
+      // The NACKF flag should not be set.
+      if (I2C2->ISR & I2C_ISR_NACKF) {
+        // Turn the LED on when the flag is set.
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+      }
+    } 
+  }
+}
+
+
+void Part1()
+{
+  /* Setup */
+  InitialSetup();
+  SetGPIOModes();
+  SetI2CPeripheral();
+
+  /* Write an address */
+  SetI2CReadOrWrite(1, false); // write
+  // Write the address of the “WHO_AM_I” register into the I2C transmit register. (TXDR)
+  I2C2->TXDR |= (0x0F << 0);
   // Wait until the TC (Transfer Complete) flag is set.
   while (!(I2C2->ISR & I2C_ISR_TC));
 
+  /* Read a value in the written address */
+  SetI2CReadOrWrite(1, true); // read
   // Check the contents of the RXDR register to see if it matches 0xD3. (expected value of the “WHO_AM_I” register)
   if (I2C2->RXDR == 0xD3)
-  {
     // Turn on the blue LED.
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
-  }
 
   // Set the STOP bit in the CR2 register to release the I2C bus.
   I2C2->CR2 |= I2C_CR2_STOP;
+}
+
+
+void SetGyroscopeRegister()
+{
+  /* 5.5 Initializing the Gyroscope */
+  SetI2CReadOrWrite(2, 0);
+
+  // Write the address of the "CTRL_REG1" register into the I2C transmit register. (TXDR)
+  I2C2->TXDR |= (0x20 << 0);
+
+  // Wait until the TC (Transfer Complete) flag is set.
+  while (!(I2C2->ISR & I2C_ISR_TC));
+
+  // Enable the X and Y sensing axes in the CTRL_REG1 register.
+  // Set the sensor into "normal or sleep mode" using the PD bit in the CTRL_REG1 register.
+  I2C2->TXDR |= ((1 << 0) | (1 << 1) | (1 << 3));
+
+  // Wait until the TC (Transfer Complete) flag is set.
+  while (!(I2C2->ISR & I2C_ISR_TC));
+} 
+
+/* 5.6 Exercise Specifications */
+void SetGyroSensor()
+{
+
+}
+
+void part2()
+{
+  SetGyroscopeRegister();
+  SetGyroSensor();
+}
+
+/* USER CODE END PFP */
+
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+int main(void) 
+{
+  HAL_Init(); // Reset of all peripherals, init the Flash and Systick
+  SystemClock_Config(); //Configure the system clock
+
+  Part1();
+
 }
 
 /** System Clock Configuration
