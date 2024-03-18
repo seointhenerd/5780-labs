@@ -75,17 +75,17 @@ void InitialSetup()
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
   // Enable I2C2 in the RCC.
   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
+}
 
+void SetGPIOModes()
+{
   // Initialize LEDs.
   GPIO_InitTypeDef initStr = {GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_6 | GPIO_PIN_7,
                               GPIO_MODE_OUTPUT_PP,
                               GPIO_SPEED_FREQ_LOW,
                               GPIO_NOPULL};
   HAL_GPIO_Init(GPIOC, &initStr);
-}
 
-void SetGPIOModes()
-{
   /* 5.2 Setting the GPIO modes */
   // Set PB11.
   // Alternate Function mode
@@ -161,10 +161,55 @@ void SetupI2CParameters(unsigned int num_of_data_byte)
   }
 }
 
+void IsReadingReceived()
+{
+  // Wait until either of the RXNE (Receive Register Not Empty) or NACKF (Slave Not-Acknowledge) flags are set.
+  while (!(I2C2->ISR & I2C_ISR_RXNE)) {
+    // The NACKF flag should not be set.
+    if (I2C2->ISR & I2C_ISR_NACKF) {
+      // Turn the LED on when the flag is set.
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+    }
+  } 
+}
+
+void IsTransferComplete()
+{
+  // Wait until the TC (Transfer Complete) flag is set.
+  while (!(I2C2->ISR & I2C_ISR_TC));
+}
+
+void IsTransmitReady()
+{
+  // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
+  while (!(I2C2->ISR & I2C_ISR_TXIS)) {
+    // The NACKF flag should not be set.
+    if (I2C2->ISR & I2C_ISR_NACKF) {
+      // Turn the LED on when the flag is set.
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+    }
+  } 
+}
+
 void SetI2CReadOrWrite(unsigned int num_of_data_byte, bool read)
 {
   /* 5.4 Reading the Register (Part of it)*/ 
-  SetupI2CParameters(num_of_data_byte);
+  // Set the transaction parameters in the CR2 register. (Do not set the AUTOEND bit.)
+  // Clear the NBYTES and SADD bit fields.
+  // The NBYTES field begins at bit 16, and the SADD at bit 0.
+  I2C2->CR2 &= ~((0x7F << 16) | (0x3FF << 0));
+  // 1. Set the slave address in the SADD[7:1] bit field.
+  I2C2->CR2 |= (0x69 << 1);
+
+  // 2. Set the number of data byte to be transmitted in the NBYTES[7:0] bit field.
+  if (num_of_data_byte == 1) {
+    I2C2->CR2 &= ~(1 << 17);
+    I2C2->CR2 |= (1 << 16);
+  }
+  else if (num_of_data_byte == 2) {
+    I2C2->CR2 |= (1 << 17);
+    I2C2->CR2 &= ~(1 << 16);
+  }
 
   // 3. Configure the RD_WRN to indicate a read/write operation.
   // 4. Setting the START bit to begin the address frame.
@@ -172,30 +217,14 @@ void SetI2CReadOrWrite(unsigned int num_of_data_byte, bool read)
     I2C2->CR2 |= I2C_CR2_RD_WRN;
     I2C2->CR2 |= I2C_CR2_START;
 
-    // Wait until either of the RXNE (Receive Register Not Empty) or NACKF (Slave Not-Acknowledge) flags are set.
-    while (!(I2C2->ISR & I2C_ISR_RXNE)) {
-      // The NACKF flag should not be set.
-      if (I2C2->ISR & I2C_ISR_NACKF) {
-        // Turn the LED on when the flag is set.
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-      }
-    } 
-    // Wait until the TC (Transfer Complete) flag is set.
-    while (!(I2C2->ISR & I2C_ISR_TC));
+    IsReadingReceived();
+    IsTransferComplete();
   }
   else // write transfer
   {
     I2C2->CR2 &= ~I2C_CR2_RD_WRN;
     I2C2->CR2 |= I2C_CR2_START;
-
-    // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
-    while (!(I2C2->ISR & I2C_ISR_TXIS)) {
-      // The NACKF flag should not be set.
-      if (I2C2->ISR & I2C_ISR_NACKF) {
-        // Turn the LED on when the flag is set.
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-      }
-    } 
+    IsTransmitReady();
   }
 }
 
@@ -211,8 +240,7 @@ void Part1()
   SetI2CReadOrWrite(1, false); // write
   // Write the address of the “WHO_AM_I” register into the I2C transmit register. (TXDR)
   I2C2->TXDR |= (0x0F << 0);
-  // Wait until the TC (Transfer Complete) flag is set.
-  while (!(I2C2->ISR & I2C_ISR_TC));
+  IsTransferComplete();  
 
   /* Read a value in the written address */
   SetI2CReadOrWrite(1, true); // read
@@ -234,15 +262,8 @@ void WriteGyroSensor()
   I2C2->CR2 &= ~I2C_CR2_RD_WRN;
   I2C2->CR2 |= I2C_CR2_START;
   
-  // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
-  while (!(I2C2->ISR & I2C_ISR_TXIS)) {
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  } 
-
+  IsTransmitReady();
+  
   // Write the address of the "CTRL_REG1" register into the I2C transmit register. (TXDR)
   I2C2->TXDR |= (0x20 << 0);
 
@@ -258,8 +279,7 @@ void WriteGyroSensor()
   // Enable the X and Y sensing axes in the CTRL_REG1 register.
   // Set the sensor into "normal or sleep mode" using the PD bit in the CTRL_REG1 register.
   I2C2->TXDR |= ((1 << 0) | (1 << 1) | (1 << 3)); // PD == bit 3
-  // Wait until the TC (Transfer Complete) flag is set.
-  while (!(I2C2->ISR & I2C_ISR_TC));
+  IsTransferComplete();
 } 
 
 /* 5.6 Exercise Specifications */
@@ -318,8 +338,7 @@ void ReadAndSaveSensorY()
   SetI2CReadOrWrite(1, false); // write
   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
   I2C2->TXDR |= (0xAA << 0);
-  // Wait until the TC (Transfer Complete) flag is set.
-  while (!(I2C2->ISR & I2C_ISR_TC));
+  IsTransferComplete(); 
 
   /* Read a value from Y */
   SetupI2CParameters(2);
