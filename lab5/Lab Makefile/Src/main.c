@@ -216,15 +216,11 @@ void SetI2CReadOrWrite(unsigned int num_of_data_byte, bool read)
   if (read) {
     I2C2->CR2 |= I2C_CR2_RD_WRN;
     I2C2->CR2 |= I2C_CR2_START;
-
-    IsReadingReceived();
-    IsTransferComplete();
   }
   else // write transfer
   {
     I2C2->CR2 &= ~I2C_CR2_RD_WRN;
     I2C2->CR2 |= I2C_CR2_START;
-    IsTransmitReady();
   }
 }
 
@@ -238,12 +234,16 @@ void Part1()
 
   /* Write an address */
   SetI2CReadOrWrite(1, false); // write
+  IsTransmitReady();
   // Write the address of the “WHO_AM_I” register into the I2C transmit register. (TXDR)
   I2C2->TXDR |= (0x0F << 0);
   IsTransferComplete();  
 
   /* Read a value in the written address */
   SetI2CReadOrWrite(1, true); // read
+  IsReadingReceived();
+  IsTransferComplete();
+
   // Check the contents of the RXDR register to see if it matches 0xD3. (expected value of the “WHO_AM_I” register)
   if (I2C2->RXDR == 0xD3)
     // Turn on the blue LED.
@@ -257,11 +257,7 @@ void Part1()
 void WriteGyroSensor()
 {
   /* 5.5 Initializing the Gyroscope */
-  SetupI2CParameters(2); // write
-  
-  I2C2->CR2 &= ~I2C_CR2_RD_WRN;
-  I2C2->CR2 |= I2C_CR2_START;
-  
+  SetI2CReadOrWrite(2, false);
   IsTransmitReady();
   
   // Write the address of the "CTRL_REG1" register into the I2C transmit register. (TXDR)
@@ -287,15 +283,14 @@ void ReadAndSaveSensorX()
 {
   /* Write an address */
   SetI2CReadOrWrite(1, false); // write 
+  IsTransmitReady();
   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
   I2C2->TXDR |= (0xA8 << 0);
   // Wait until the TC (Transfer Complete) flag is set.
   while (!(I2C2->ISR & I2C_ISR_TC));
 
   /* Read a value from X */
-  SetupI2CParameters(2);
-  I2C2->CR2 |= I2C_CR2_RD_WRN;
-  I2C2->CR2 |= I2C_CR2_START;
+  SetI2CReadOrWrite(2, true);
 
   // Initialize variables for X.
   char out_x_l, out_x_h; // 1 byte = 8 bits
@@ -336,14 +331,13 @@ void ReadAndSaveSensorY()
   /* Write an address */
   // Read and save the value of the X and Y axis data registers every 100ms.
   SetI2CReadOrWrite(1, false); // write
+  IsTransmitReady();
   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
   I2C2->TXDR |= (0xAA << 0);
   IsTransferComplete(); 
 
   /* Read a value from Y */
-  SetupI2CParameters(2);
-  I2C2->CR2 |= I2C_CR2_RD_WRN;
-  I2C2->CR2 |= I2C_CR2_START;
+  SetI2CReadOrWrite(2, true);
 
   // Initialize variables for y.
   char out_y_l, out_y_h; // 1 byte = 8 bits
