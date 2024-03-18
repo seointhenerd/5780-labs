@@ -46,6 +46,7 @@
 #include "stm32f072xb.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 void _Error_Handler(char * file, int line);
 
 /* USER CODE BEGIN Includes */
@@ -68,6 +69,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
+/* Setup Functions */
 void InitialSetup()
 {
   // Enable GPIOB and GPIOC in the RCC.
@@ -132,10 +134,10 @@ void SetI2CPeripheral()
   /* 5.3 Initializing the I2C Peripheral */
   // Set the parameters in the TIMINGR register to use 100 kHz standard-mode I2C.
   I2C2->TIMINGR |= (1 << 28);     // PRESC
-  I2C2->TIMINGR |= (0x13 << 0);   // SCLL (0x13 == 0b10011)
-  I2C2->TIMINGR |= (0xF << 8);    // SCLH (0xF == 0b1111)
-  I2C2->TIMINGR |= (0x2 << 16);   // SDADEL (0x2 == 0b0010)
-  I2C2->TIMINGR |= (0x4 << 20);   // SCADEL (0x4 == 0b0100)
+  I2C2->TIMINGR |= (0x13 << 0);   // SCLL 
+  I2C2->TIMINGR |= (0xF << 8);    // SCLH 
+  I2C2->TIMINGR |= (0x2 << 16);   // SDADEL 
+  I2C2->TIMINGR |= (0x4 << 20);   // SCADEL 
 
   // Enable the I2C peripheral using the PE bit in the CR1 register.
   I2C2->CR1 |= I2C_CR1_PE;
@@ -165,24 +167,6 @@ void IsReadingReceived()
 {
   // Wait until either of the RXNE (Receive Register Not Empty) or NACKF (Slave Not-Acknowledge) flags are set.
   while (!(I2C2->ISR & I2C_ISR_RXNE)) {
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  } 
-}
-
-void IsTransferComplete()
-{
-  // Wait until the TC (Transfer Complete) flag is set.
-  while (!(I2C2->ISR & I2C_ISR_TC));
-}
-
-void IsTransmitReady()
-{
-  // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
-  while (!(I2C2->ISR & I2C_ISR_TXIS)) {
     // The NACKF flag should not be set.
     if (I2C2->ISR & I2C_ISR_NACKF) {
       // Turn the LED on when the flag is set.
@@ -225,6 +209,26 @@ void SetI2CReadOrWrite(unsigned int num_of_data_byte, bool read)
 }
 
 
+/* Condition Check Functions */
+void IsTransferComplete()
+{
+  // Wait until the TC (Transfer Complete) flag is set.
+  while (!(I2C2->ISR & I2C_ISR_TC));
+}
+
+void IsTransmitReady()
+{
+  // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
+  while (!(I2C2->ISR & I2C_ISR_TXIS)) {
+    // The NACKF flag should not be set.
+    if (I2C2->ISR & I2C_ISR_NACKF) {
+      // Turn the LED on when the flag is set.
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+    }
+  } 
+}
+
+
 void Part1()
 {
   /* Setup */
@@ -254,6 +258,7 @@ void Part1()
 }
 
 
+/* PART 2 START */
 void WriteGyroSensor()
 {
   /* 5.5 Initializing the Gyroscope */
@@ -341,7 +346,6 @@ void ReadAndSaveSensorY()
 
   // Initialize variables for y.
   char out_y_l, out_y_h; // 1 byte = 8 bits
-  out_y_l = I2C2->RXDR;
 
   // Read a first value.
   while (1) {
@@ -376,12 +380,17 @@ void ReadAndSaveSensorY()
 
 void GyroLED(int16_t x, int16_t y)
 {
-  int16_t threshold = 1000;
+  int16_t threshold = 2000;
 
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (x > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive X
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (x < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative X
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, (y > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive Y
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, (y < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative Y
+  if (abs(x) > abs(y)) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (x > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive X
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (x < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative X
+  }
+  else {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, (y > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive Y
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, (y < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative Y
+  }
+  
 }
 
 void Part2()
