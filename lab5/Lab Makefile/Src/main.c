@@ -57,8 +57,7 @@ void _Error_Handler(char * file, int line);
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-int16_t out_x;
-int16_t out_y;
+int16_t out_x, out_y;
 
 
 /* USER CODE END PV */
@@ -70,7 +69,7 @@ void SystemClock_Config(void);
 /* Private function prototypes -----------------------------------------------*/
 
 /* Setup Functions */
-void InitialSetup()
+void SetEnable()
 {
   // Enable GPIOB and GPIOC in the RCC.
   RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
@@ -232,7 +231,7 @@ void IsTransmitReady()
 void Part1()
 {
   /* Setup */
-  InitialSetup();
+  SetEnable();
   SetGPIOModes();
   SetI2CPeripheral();
 
@@ -266,20 +265,12 @@ void WriteGyroSensor()
   IsTransmitReady();
   
   // Write the address of the "CTRL_REG1" register into the I2C transmit register. (TXDR)
-  I2C2->TXDR |= (0x20 << 0);
-
-  // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge) flags are set.
-  while (!(I2C2->ISR & I2C_ISR_TXIS)) {
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  } 
+  I2C2->TXDR = 0x20;
+  IsTransmitReady();
 
   // Enable the X and Y sensing axes in the CTRL_REG1 register.
   // Set the sensor into "normal or sleep mode" using the PD bit in the CTRL_REG1 register.
-  I2C2->TXDR |= ((1 << 0) | (1 << 1) | (1 << 3)); // PD == bit 3
+  I2C2->TXDR = 0x0B; // PD == bit 3 (1011)
   IsTransferComplete();
 } 
 
@@ -291,44 +282,22 @@ void ReadAndSaveSensorX()
   IsTransmitReady();
   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
   I2C2->TXDR |= (0xA8 << 0);
-  // Wait until the TC (Transfer Complete) flag is set.
-  while (!(I2C2->ISR & I2C_ISR_TC));
+  IsTransferComplete();
+  I2C2->CR2 |= I2C_CR2_STOP;
 
   /* Read a value from X */
-  SetI2CReadOrWrite(2, true);
-
   // Initialize variables for X.
   char out_x_l, out_x_h; // 1 byte = 8 bits
+  SetI2CReadOrWrite(2, true);
 
-  // Read a first value.
-  while (1) {
-    if (I2C2->ISR & I2C_ISR_RXNE) {
-      // Retrieve the first value.
-      out_x_l = I2C2->RXDR;
-      break;
-    }
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  }
+  IsReadingReceived();
+  out_x = I2C2->RXDR;
+
+  IsReadingReceived();
+  out_x |= (I2C2->RXDR << 8);
+  IsTransferComplete();
   
-  // Read a second value.
-  while (1) {
-    if (I2C2->ISR & I2C_ISR_RXNE) {
-      // Retrieve the second value.
-      out_x_h = I2C2->RXDR;
-      break;
-    }
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  }
-
-  out_x = (out_x_h << 8) | out_x_l;
+  // out_x = (out_x_h << 8) | out_x_l;
 }
 
 void ReadAndSaveSensorY()
@@ -340,73 +309,52 @@ void ReadAndSaveSensorY()
   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
   I2C2->TXDR |= (0xAA << 0);
   IsTransferComplete(); 
+  I2C2->CR2 |= I2C_CR2_STOP;
 
   /* Read a value from Y */
-  SetI2CReadOrWrite(2, true);
-
   // Initialize variables for y.
   char out_y_l, out_y_h; // 1 byte = 8 bits
+  SetI2CReadOrWrite(2, true);
 
-  // Read a first value.
-  while (1) {
-    if (I2C2->ISR & I2C_ISR_RXNE) {
-      // Retrieve the first value.
-      out_y_l = I2C2->RXDR;
-      break;    
-    }
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  }
-  
-  // Read a second value.
-  while (1) {
-    if (I2C2->ISR & I2C_ISR_RXNE) {
-      // Retrieve the second value.
-      out_y_h = I2C2->RXDR;
-      break;    
-    }
-    // The NACKF flag should not be set.
-    if (I2C2->ISR & I2C_ISR_NACKF) {
-      // Turn the LED on when the flag is set.
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-    }
-  }
+  IsReadingReceived();
+  out_y = I2C2->RXDR;
 
-  out_y = (out_y_h << 8) | out_y_l;
+  IsReadingReceived();
+  out_y |= (I2C2->RXDR << 8);
+  IsTransferComplete();
+  // out_y = (out_y_h << 8) | out_y_l;
 }
 
 void GyroLED(int16_t x, int16_t y)
 {
-  int16_t threshold = 2000;
+  int16_t threshold = 500;
 
-  if (abs(x) > abs(y)) {
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (x > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive X
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (x < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative X
+  if (abs(x) > threshold | abs(y) > threshold)
+  {
+    if (abs(x) > abs(y)) {
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (x > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive X
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (x < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative X
+    }
+    else {
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, (y > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive Y
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, (y < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative Y
+    }
   }
-  else {
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, (y > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Positive Y
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, (y < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Negative Y
-  }
-  
 }
 
 void Part2()
 {
   /* Setup */
-  InitialSetup();
+  SetEnable();
   SetGPIOModes();
   SetI2CPeripheral();
   
-  /* Initializing a Gyroscope*/
+  /* Initializing a Gyroscope */
   WriteGyroSensor();
+
   while (1) {
     ReadAndSaveSensorX();
     ReadAndSaveSensorY();
-    // Set the STOP bit in the CR2 register to release the I2C bus.
-    I2C2->CR2 |= I2C_CR2_STOP;
     GyroLED(out_x, out_y);  
     HAL_Delay(100); // every 100ms
   }
