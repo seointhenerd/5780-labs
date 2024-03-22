@@ -78,6 +78,75 @@ void SetEnable()
   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
   RCC->APB2ENR |= RCC_APB2ENR_ADCEN;
 }
+
+void InitializeLEDPins()
+{
+  GPIO_InitTypeDef initStr = {GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9,
+                              GPIO_MODE_OUTPUT_PP,
+                              GPIO_SPEED_FREQ_LOW,
+                              GPIO_NOPULL};
+  HAL_GPIO_Init(GPIOC, &initStr);
+}
+
+void Calibration()
+{
+  /* (1) Ensure that ADEN = 0 */
+  /* (2) Clear ADEN by setting ADDIS*/
+  /* (3) Clear DMAEN */
+  /* (4) Launch the calibration by setting ADCAL */
+  /* (5) Wait until ADCAL=0 */
+  if ((ADC1->CR & ADC_CR_ADEN) != 0) /* (1) */ {
+    ADC1->CR |= ADC_CR_ADDIS; /* (2) */
+  }
+  while ((ADC1->CR & ADC_CR_ADEN) != 0);
+  ADC1->CFGR1 &= ~ADC_CFGR1_DMAEN; /* (3) */
+  ADC1->CR |= ADC_CR_ADCAL; /* (4) */
+  while ((ADC1->CR & ADC_CR_ADCAL) != 0); /* (5) */
+}
+
+void EnableADC()
+{
+  /* Enable the ADC */
+  /* (1) Ensure that ADRDY = 0 */
+  /* (2) Clear ADRDY */
+  /* (3) Enable the ADC */
+  /* (4) Wait until ADC ready */
+  if (ADC1->ISR & ADC_ISR_ADRDY) /* (1) */ {
+    ADC1->ISR |= ADC_ISR_ADRDY; /* (2) */
+  }
+  ADC1->CR |= ADC_CR_ADEN; /* (3) */
+  while (!(ADC1->ISR & ADC_ISR_ADRDY)); /* (4) */    
+}
+
+void SetLEDSByADC()
+{
+  int threshold1 = 0;
+  int threshold2 = 65;
+  int threshold3 = 130;
+  int threshold4 = 250;
+
+  // Reset all LEDs
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9, GPIO_PIN_RESET);
+
+  if (ADC1->DR > threshold1 && ADC1->DR <= threshold2) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+  }
+  else if (ADC1->DR > threshold2 && ADC1->DR <= threshold3) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+  }
+  else if (ADC1->DR > threshold3 && ADC1->DR <= threshold4) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+  }
+  else if (ADC1->DR > threshold4) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+  }
+  else {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+  }
+}
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -92,11 +161,7 @@ int main(void)
   *******************************************/
   // 1. Initialize the LED pins to output.
   SetEnable();
-  GPIO_InitTypeDef initStr = {GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9,
-                              GPIO_MODE_OUTPUT_PP,
-                              GPIO_SPEED_FREQ_LOW,
-                              GPIO_NOPULL};
-  HAL_GPIO_Init(GPIOC, &initStr);
+  InitializeLEDPins();
 
   // 2. Select a GPIO pin to use as the ADC input. (PC0)
   // Configure to Analog mode
@@ -114,67 +179,14 @@ int main(void)
   ADC1->CFGR1 &= ~ADC_CFGR1_EXTEN;
 
   // 5. Select/enable the input pin’s channel for ADC conversion.
-  GPIOC->BSRR &= ~GPIO_BSRR_BR_0;
+  ADC1->CHSELR |= ADC_CHSELR_CHSEL10;
+
   
   // 6. Perform a self-calibration, enable, and start the ADC.
-    /* Calibration software procedure */
-    /* (1) Ensure that ADEN = 0 */
-    /* (2) Clear ADEN by setting ADDIS*/
-    /* (3) Clear DMAEN */
-    /* (4) Launch the calibration by setting ADCAL */
-    /* (5) Wait until ADCAL=0 */
-    if ((ADC1->CR & ADC_CR_ADEN) != 0) /* (1) */ {
-      ADC1->CR |= ADC_CR_ADDIS; /* (2) */
-    }
-    while ((ADC1->CR & ADC_CR_ADEN) != 0);
-    ADC1->CFGR1 &= ~ADC_CFGR1_DMAEN; /* (3) */
-    ADC1->CR |= ADC_CR_ADCAL; /* (4) */
-    while ((ADC1->CR & ADC_CR_ADCAL) != 0); /* (5) */
-
-    /* Enable the ADC */
-    /* (1) Ensure that ADRDY = 0 */
-    /* (2) Clear ADRDY */
-    /* (3) Enable the ADC */
-    /* (4) Wait until ADC ready */
-    if ((ADC1->ISR & ADC_ISR_ADRDY) != 0) /* (1) */ {
-      ADC1->ISR |= ADC_ISR_ADRDY; /* (2) */
-    }
-    ADC1->CR |= ADC_CR_ADEN; /* (3) */
-    while ((ADC1->ISR & ADC_ISR_ADRDY) == 0); /* (4) */    
-
+    Calibration();
+    EnableADC();
     // Start ADC.
     ADC1->CR |= ADC_CR_ADSTART;
-  // 7. In the main application loop, read the ADC data register and turn on/off LEDs depending on the value.
-  int threshold1 = 0;
-  int threshold2 = 64;
-  int threshold3 = 128;
-  int threshold4 = 256;
-
-  while (1) {
-    while (!(ADC1->IER & ADC_IER_ADRDYIE)) {
-      // Reset all LEDs
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9, GPIO_PIN_RESET);
-
-      if (ADC1->DR > threshold1 && ADC1->DR <= threshold2) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-      }
-      else if (ADC1->DR > threshold2 && ADC1->DR <= threshold3) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
-      }
-      else if (ADC1->DR > threshold3 && ADC1->DR <= threshold4) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-      }
-      else if (ADC1->DR > threshold4) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-      }
-      else {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-      }
-    }  
-  }
 
   /************************************
   6.2 Generating Waveforms with the DAC
@@ -186,7 +198,7 @@ int main(void)
   GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR4_1 | GPIO_PUPDR_PUPDR4_0);
   
   // 2. Set the used DAC channel to software trigger mode
-  DAC1->SWTRIGR |= DAC_SWTRIGR_SWTRIG1;
+  DAC1->CR |= (DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0);
 
   // 3. Enable the used DAC channel
   DAC1->CR |= DAC_CR_EN1;
@@ -199,10 +211,12 @@ int main(void)
   // 5. In the main application loop, use an index variable to write the next value in the wave-table (array) 
   // to the appropriate DAC data register.
   while (1) {
-    for (int i = 0; i < 32; i++) {
+    // SetLEDSByADC();
+    int i;
+    for (i = 0; i < 32; i++) {
       DAC1->DHR8R1 = sine_table[i];
       // 6. Use a 1ms delay between updating the DAC to new values.
-      HAL_Delay(1000);
+      HAL_Delay(1);
     }
   }
 }
