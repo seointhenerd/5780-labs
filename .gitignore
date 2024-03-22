@@ -57,3 +57,6 @@ dkms.conf
 /.vscode
 /lab5/Lab Makefile/.mxproject
 .DS_Store
+
+/lab6/Lab Makefile/build
+/lab4/Lab Makefile/build
