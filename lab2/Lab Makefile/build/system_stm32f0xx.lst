@@ -1,4 +1,4 @@
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
   30:Src/system_stm32f0xx.c ****   *-----------------------------------------------------------------------------
   31:Src/system_stm32f0xx.c ****   *        SYSCLK(Hz)                             | 8000000
   32:Src/system_stm32f0xx.c ****   *-----------------------------------------------------------------------------
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 2
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 2
 
 
   33:Src/system_stm32f0xx.c ****   *        HCLK(Hz)                               | 8000000
@@ -118,7 +118,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
   87:Src/system_stm32f0xx.c **** 
   88:Src/system_stm32f0xx.c **** #if !defined  (HSI_VALUE)
   89:Src/system_stm32f0xx.c ****   #define HSI_VALUE    ((uint32_t)8000000) /*!< Default value of the Internal oscillator in Hz.
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 3
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 3
 
 
   90:Src/system_stm32f0xx.c ****                                                 This value can be provided and adapted by the user 
@@ -178,7 +178,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
  144:Src/system_stm32f0xx.c ****   * @retval None
  145:Src/system_stm32f0xx.c ****   */
  146:Src/system_stm32f0xx.c **** void SystemInit(void)
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 4
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 4
 
 
  147:Src/system_stm32f0xx.c **** {
@@ -238,7 +238,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
  182:Src/system_stm32f0xx.c ****   *              8 MHz), user has to ensure that HSE_VALUE is same as the real
  183:Src/system_stm32f0xx.c ****   *              frequency of the crystal used. Otherwise, this function may
  184:Src/system_stm32f0xx.c ****   *              have wrong result.
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 5
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 5
 
 
  185:Src/system_stm32f0xx.c ****   *
@@ -298,7 +298,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
   83              		.loc 1 203 7 is_stmt 1 view .LVU12
   84              	.LVL4:
   85              	.L6:
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 6
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 6
 
 
  204:Src/system_stm32f0xx.c ****     case RCC_CFGR_SWS_HSE:  /* HSE used as system clock */
@@ -358,7 +358,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
   96 0028 D15C     		ldrb	r1, [r2, r3]
   97              	.LVL5:
  248:Src/system_stm32f0xx.c ****   /* HCLK clock frequency */
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 7
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 7
 
 
  249:Src/system_stm32f0xx.c ****   SystemCoreClock >>= tmp;
@@ -418,7 +418,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
  138 0048 800C     		lsrs	r0, r0, #18
  139              	.LVL13:
  211:Src/system_stm32f0xx.c ****       predivfactor = (RCC->CFGR2 & RCC_CFGR2_PREDIV) + 1;
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 8
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 8
 
 
  140              		.loc 1 211 27 view .LVU32
@@ -478,7 +478,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
  217:Src/system_stm32f0xx.c ****       }
  180              		.loc 1 217 37 is_stmt 0 view .LVU47
  181 0074 0A48     		ldr	r0, .L11+8
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 9
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 9
 
 
  182 0076 FFF7FEFF 		bl	__aeabi_uidiv
@@ -538,7 +538,7 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
  225              	.LFE41:
  227              		.global	APBPrescTable
  228              		.section	.rodata.APBPrescTable,"a"
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 10
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 10
 
 
  229              		.align	2
@@ -565,22 +565,22 @@ ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 1
  252              		.file 3 "/Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
  253              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h"
  254              		.file 5 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f072xb.h"
-ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s 			page 11
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s 			page 11
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 system_stm32f0xx.c
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:19     .text.SystemInit:00000000 $t
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:25     .text.SystemInit:00000000 SystemInit
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:40     .text.SystemCoreClockUpdate:00000000 $t
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:46     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:219    .text.SystemCoreClockUpdate:00000098 $d
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:247    .data.SystemCoreClock:00000000 SystemCoreClock
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:239    .rodata.AHBPrescTable:00000000 AHBPrescTable
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:232    .rodata.APBPrescTable:00000000 APBPrescTable
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:229    .rodata.APBPrescTable:00000000 $d
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:236    .rodata.AHBPrescTable:00000000 $d
-/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc2VpVd5.s:244    .data.SystemCoreClock:00000000 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:19     .text.SystemInit:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:25     .text.SystemInit:00000000 SystemInit
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:40     .text.SystemCoreClockUpdate:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:46     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:219    .text.SystemCoreClockUpdate:00000098 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:247    .data.SystemCoreClock:00000000 SystemCoreClock
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:239    .rodata.AHBPrescTable:00000000 AHBPrescTable
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:232    .rodata.APBPrescTable:00000000 APBPrescTable
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:229    .rodata.APBPrescTable:00000000 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:236    .rodata.AHBPrescTable:00000000 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//ccVNOTnc.s:244    .data.SystemCoreClock:00000000 $d
 
 UNDEFINED SYMBOLS
 __aeabi_uidiv
