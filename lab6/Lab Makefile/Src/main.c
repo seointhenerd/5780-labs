@@ -71,12 +71,10 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 void SetEnable()
 {
-  // Enable GPIOB and GPIOC in the RCC.
-  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+  RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-  // Enable I2C2 in the RCC.
-  RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
   RCC->APB2ENR |= RCC_APB2ENR_ADCEN;
+  RCC->APB1ENR |= RCC_APB1ENR_DACEN;
 }
 
 void InitializeLEDPins()
@@ -181,7 +179,6 @@ int main(void)
   // 5. Select/enable the input pin’s channel for ADC conversion.
   ADC1->CHSELR |= ADC_CHSELR_CHSEL10;
 
-  
   // 6. Perform a self-calibration, enable, and start the ADC.
     Calibration();
     EnableADC();
@@ -201,6 +198,7 @@ int main(void)
   DAC1->CR |= (DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0);
 
   // 3. Enable the used DAC channel
+  DAC1->CR |= DAC_CR_TEN1;
   DAC1->CR |= DAC_CR_EN1;
 
   // 4. Copy one of the wave-tables in figure 6.8 into your application.
@@ -211,10 +209,12 @@ int main(void)
   // 5. In the main application loop, use an index variable to write the next value in the wave-table (array) 
   // to the appropriate DAC data register.
   while (1) {
-    // SetLEDSByADC();
-    int i;
-    for (i = 0; i < 32; i++) {
+    /* Part 1*/
+    SetLEDSByADC();
+    /* Part 2 */
+    for (int i = 0; i < 32; i++) {
       DAC1->DHR8R1 = sine_table[i];
+      DAC1->SWTRIGR = DAC_SWTRIGR_SWTRIG1;
       // 6. Use a 1ms delay between updating the DAC to new values.
       HAL_Delay(1);
     }
