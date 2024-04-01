@@ -160,7 +160,7 @@ void PI_update(void) {
      */
     
     /// TODO: calculate error signal and write to "error" variable
-    error = target_rpm - motor_speed;
+    error = target_rpm - (motor_speed >> 1);
     
     /* Hint: Remember that your calculated motor speed may not be directly in RPM!
      *       You will need to convert the target or encoder speeds to the same units.
@@ -173,11 +173,10 @@ void PI_update(void) {
     error_integral += error;
     
     /// TODO: Clamp the value of the integral to a limited positive range
-    if (error_integral > 3200) {
+    if (error_integral > 3200) 
         error_integral = 3200;
-    } else if (error_integral < 0) {
+    if (error_integral < 0) 
         error_integral = 0;
-    }
     
     /* Hint: The value clamp is needed to prevent excessive "windup" in the integral.
      *       You'll read more about this for the post-lab. The exact value is arbitrary
@@ -209,11 +208,10 @@ void PI_update(void) {
      output >>= 5;
      
      /// TODO: Clamp the output value between 0 and 100 
-     if (output > 100) {
+     if (output > 100) 
         output = 100;
-     } else if (output < 0) {
+     if (output < 0) 
         output = 0;
-     }
     
     pwm_setDutyCycle(output);
     duty_cycle = output;            // For debug viewing
