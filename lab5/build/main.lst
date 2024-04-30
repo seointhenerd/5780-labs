@@ -1,0 +1,2040 @@
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Src/main.c"
+  18              		.section	.text.SetEnable,"ax",%progbits
+  19              		.align	1
+  20              		.global	SetEnable
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	SetEnable:
+  26              	.LFB43:
+   1:Src/main.c    **** /**
+   2:Src/main.c    ****   *
+   3:Src/main.c    ****   * Seoin Kim
+   4:Src/main.c    ****   * u1324614
+   5:Src/main.c    ****   *
+   6:Src/main.c    ****   ******************************************************************************
+   7:Src/main.c    ****   * File Name          : main.c
+   8:Src/main.c    ****   * Description        : Main program body
+   9:Src/main.c    ****   ******************************************************************************
+  10:Src/main.c    ****   ** This notice applies to any and all portions of this file
+  11:Src/main.c    ****   * that are not between comment pairs USER CODE BEGIN and
+  12:Src/main.c    ****   * USER CODE END. Other portions of this file, whether
+  13:Src/main.c    ****   * inserted by the user or by software development tools
+  14:Src/main.c    ****   * are owned by their respective copyright owners.
+  15:Src/main.c    ****   *
+  16:Src/main.c    ****   * COPYRIGHT(c) 2018 STMicroelectronics
+  17:Src/main.c    ****   *
+  18:Src/main.c    ****   * Redistribution and use in source and binary forms, with or without modification,
+  19:Src/main.c    ****   * are permitted provided that the following conditions are met:
+  20:Src/main.c    ****   *   1. Redistributions of source code must retain the above copyright notice,
+  21:Src/main.c    ****   *      this list of conditions and the following disclaimer.
+  22:Src/main.c    ****   *   2. Redistributions in binary form must reproduce the above copyright notice,
+  23:Src/main.c    ****   *      this list of conditions and the following disclaimer in the documentation
+  24:Src/main.c    ****   *      and/or other materials provided with the distribution.
+  25:Src/main.c    ****   *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  26:Src/main.c    ****   *      may be used to endorse or promote products derived from this software
+  27:Src/main.c    ****   *      without specific prior written permission.
+  28:Src/main.c    ****   *
+  29:Src/main.c    ****   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  30:Src/main.c    ****   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  31:Src/main.c    ****   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  32:Src/main.c    ****   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 2
+
+
+  33:Src/main.c    ****   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  34:Src/main.c    ****   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  35:Src/main.c    ****   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  36:Src/main.c    ****   * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  37:Src/main.c    ****   * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  38:Src/main.c    ****   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  39:Src/main.c    ****   *
+  40:Src/main.c    ****   ******************************************************************************
+  41:Src/main.c    ****   */
+  42:Src/main.c    **** 
+  43:Src/main.c    **** /* Includes ------------------------------------------------------------------*/
+  44:Src/main.c    **** #include "main.h"
+  45:Src/main.c    **** #include "stm32f0xx_hal.h"
+  46:Src/main.c    **** #include "stm32f072xb.h"
+  47:Src/main.c    **** #include <stdbool.h>
+  48:Src/main.c    **** #include <stdio.h>
+  49:Src/main.c    **** #include <stdlib.h>
+  50:Src/main.c    **** void _Error_Handler(char * file, int line);
+  51:Src/main.c    **** 
+  52:Src/main.c    **** /* USER CODE BEGIN Includes */
+  53:Src/main.c    **** 
+  54:Src/main.c    **** /* USER CODE END Includes */
+  55:Src/main.c    **** 
+  56:Src/main.c    **** /* Private variables ---------------------------------------------------------*/
+  57:Src/main.c    **** 
+  58:Src/main.c    **** /* USER CODE BEGIN PV */
+  59:Src/main.c    **** /* Private variables ---------------------------------------------------------*/
+  60:Src/main.c    **** int16_t out_x, out_y;
+  61:Src/main.c    **** 
+  62:Src/main.c    **** 
+  63:Src/main.c    **** /* USER CODE END PV */
+  64:Src/main.c    **** 
+  65:Src/main.c    **** /* Private function prototypes -----------------------------------------------*/
+  66:Src/main.c    **** void SystemClock_Config(void);
+  67:Src/main.c    **** 
+  68:Src/main.c    **** /* USER CODE BEGIN PFP */
+  69:Src/main.c    **** /* Private function prototypes -----------------------------------------------*/
+  70:Src/main.c    **** 
+  71:Src/main.c    **** /* Setup Functions */
+  72:Src/main.c    **** void SetEnable()
+  73:Src/main.c    **** {
+  27              		.loc 1 73 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+  74:Src/main.c    ****   // Enable GPIOB and GPIOC in the RCC.
+  75:Src/main.c    ****   RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+  32              		.loc 1 75 3 view .LVU1
+  33              		.loc 1 75 6 is_stmt 0 view .LVU2
+  34 0000 084B     		ldr	r3, .L2
+  35 0002 5969     		ldr	r1, [r3, #20]
+  36              		.loc 1 75 15 view .LVU3
+  37 0004 8022     		movs	r2, #128
+  38 0006 D202     		lsls	r2, r2, #11
+  39 0008 0A43     		orrs	r2, r1
+  40 000a 5A61     		str	r2, [r3, #20]
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 3
+
+
+  76:Src/main.c    ****   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+  41              		.loc 1 76 3 is_stmt 1 view .LVU4
+  42              		.loc 1 76 6 is_stmt 0 view .LVU5
+  43 000c 5969     		ldr	r1, [r3, #20]
+  44              		.loc 1 76 15 view .LVU6
+  45 000e 8022     		movs	r2, #128
+  46 0010 1203     		lsls	r2, r2, #12
+  47 0012 0A43     		orrs	r2, r1
+  48 0014 5A61     		str	r2, [r3, #20]
+  77:Src/main.c    ****   // Enable I2C2 in the RCC.
+  78:Src/main.c    ****   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
+  49              		.loc 1 78 3 is_stmt 1 view .LVU7
+  50              		.loc 1 78 6 is_stmt 0 view .LVU8
+  51 0016 D969     		ldr	r1, [r3, #28]
+  52              		.loc 1 78 16 view .LVU9
+  53 0018 8022     		movs	r2, #128
+  54 001a D203     		lsls	r2, r2, #15
+  55 001c 0A43     		orrs	r2, r1
+  56 001e DA61     		str	r2, [r3, #28]
+  79:Src/main.c    **** }
+  57              		.loc 1 79 1 view .LVU10
+  58              		@ sp needed
+  59 0020 7047     		bx	lr
+  60              	.L3:
+  61 0022 C046     		.align	2
+  62              	.L2:
+  63 0024 00100240 		.word	1073876992
+  64              		.cfi_endproc
+  65              	.LFE43:
+  67              		.section	.text.SetGPIOModes,"ax",%progbits
+  68              		.align	1
+  69              		.global	SetGPIOModes
+  70              		.syntax unified
+  71              		.code	16
+  72              		.thumb_func
+  74              	SetGPIOModes:
+  75              	.LFB44:
+  80:Src/main.c    **** 
+  81:Src/main.c    **** void SetGPIOModes()
+  82:Src/main.c    **** {
+  76              		.loc 1 82 1 is_stmt 1 view -0
+  77              		.cfi_startproc
+  78              		@ args = 0, pretend = 0, frame = 24
+  79              		@ frame_needed = 0, uses_anonymous_args = 0
+  80 0000 30B5     		push	{r4, r5, lr}
+  81              	.LCFI0:
+  82              		.cfi_def_cfa_offset 12
+  83              		.cfi_offset 4, -12
+  84              		.cfi_offset 5, -8
+  85              		.cfi_offset 14, -4
+  86 0002 87B0     		sub	sp, sp, #28
+  87              	.LCFI1:
+  88              		.cfi_def_cfa_offset 40
+  83:Src/main.c    ****   // Initialize LEDs.
+  84:Src/main.c    ****   GPIO_InitTypeDef initStr = {GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_6 | GPIO_PIN_7,
+  89              		.loc 1 84 3 view .LVU12
+  90              		.loc 1 84 20 is_stmt 0 view .LVU13
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 4
+
+
+  91 0004 1422     		movs	r2, #20
+  92 0006 0021     		movs	r1, #0
+  93 0008 01A8     		add	r0, sp, #4
+  94 000a FFF7FEFF 		bl	memset
+  95              	.LVL0:
+  96 000e F023     		movs	r3, #240
+  97 0010 9B00     		lsls	r3, r3, #2
+  98 0012 0193     		str	r3, [sp, #4]
+  99 0014 0125     		movs	r5, #1
+ 100 0016 0295     		str	r5, [sp, #8]
+  85:Src/main.c    ****                               GPIO_MODE_OUTPUT_PP,
+  86:Src/main.c    ****                               GPIO_SPEED_FREQ_LOW,
+  87:Src/main.c    ****                               GPIO_NOPULL};
+  88:Src/main.c    ****   HAL_GPIO_Init(GPIOC, &initStr);
+ 101              		.loc 1 88 3 is_stmt 1 view .LVU14
+ 102 0018 284C     		ldr	r4, .L5
+ 103 001a 01A9     		add	r1, sp, #4
+ 104 001c 2000     		movs	r0, r4
+ 105 001e FFF7FEFF 		bl	HAL_GPIO_Init
+ 106              	.LVL1:
+  89:Src/main.c    **** 
+  90:Src/main.c    ****   /* 5.2 Setting the GPIO modes */
+  91:Src/main.c    ****   // Set PB11.
+  92:Src/main.c    ****   // Alternate Function mode
+  93:Src/main.c    ****   GPIOB->MODER |= GPIO_MODER_MODER11_1;
+ 107              		.loc 1 93 3 view .LVU15
+ 108              		.loc 1 93 8 is_stmt 0 view .LVU16
+ 109 0022 274B     		ldr	r3, .L5+4
+ 110 0024 1968     		ldr	r1, [r3]
+ 111              		.loc 1 93 16 view .LVU17
+ 112 0026 8022     		movs	r2, #128
+ 113 0028 1204     		lsls	r2, r2, #16
+ 114 002a 0A43     		orrs	r2, r1
+ 115 002c 1A60     		str	r2, [r3]
+  94:Src/main.c    ****   GPIOB->MODER &= ~GPIO_MODER_MODER11_0;
+ 116              		.loc 1 94 3 is_stmt 1 view .LVU18
+ 117              		.loc 1 94 8 is_stmt 0 view .LVU19
+ 118 002e 1A68     		ldr	r2, [r3]
+ 119              		.loc 1 94 16 view .LVU20
+ 120 0030 2449     		ldr	r1, .L5+8
+ 121 0032 0A40     		ands	r2, r1
+ 122 0034 1A60     		str	r2, [r3]
+  95:Src/main.c    ****   // Open-drain Output type
+  96:Src/main.c    ****   GPIOB->OTYPER |= GPIO_OTYPER_OT_11;
+ 123              		.loc 1 96 3 is_stmt 1 view .LVU21
+ 124              		.loc 1 96 8 is_stmt 0 view .LVU22
+ 125 0036 5968     		ldr	r1, [r3, #4]
+ 126              		.loc 1 96 17 view .LVU23
+ 127 0038 8022     		movs	r2, #128
+ 128 003a 1201     		lsls	r2, r2, #4
+ 129 003c 0A43     		orrs	r2, r1
+ 130 003e 5A60     		str	r2, [r3, #4]
+  97:Src/main.c    ****   // Select I2C2_SDA as its alternate function.
+  98:Src/main.c    ****   GPIOB->AFR[1] |= (1 << 12);
+ 131              		.loc 1 98 3 is_stmt 1 view .LVU24
+ 132              		.loc 1 98 13 is_stmt 0 view .LVU25
+ 133 0040 596A     		ldr	r1, [r3, #36]
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 5
+
+
+ 134              		.loc 1 98 17 view .LVU26
+ 135 0042 8022     		movs	r2, #128
+ 136 0044 5201     		lsls	r2, r2, #5
+ 137 0046 0A43     		orrs	r2, r1
+ 138 0048 5A62     		str	r2, [r3, #36]
+  99:Src/main.c    **** 
+ 100:Src/main.c    ****   // Set PB13.
+ 101:Src/main.c    ****   // Alternate Function mode
+ 102:Src/main.c    ****   GPIOB->MODER |= GPIO_MODER_MODER13_1;
+ 139              		.loc 1 102 3 is_stmt 1 view .LVU27
+ 140              		.loc 1 102 8 is_stmt 0 view .LVU28
+ 141 004a 1968     		ldr	r1, [r3]
+ 142              		.loc 1 102 16 view .LVU29
+ 143 004c 8022     		movs	r2, #128
+ 144 004e 1205     		lsls	r2, r2, #20
+ 145 0050 0A43     		orrs	r2, r1
+ 146 0052 1A60     		str	r2, [r3]
+ 103:Src/main.c    ****   GPIOB->MODER &= ~GPIO_MODER_MODER13_0;
+ 147              		.loc 1 103 3 is_stmt 1 view .LVU30
+ 148              		.loc 1 103 8 is_stmt 0 view .LVU31
+ 149 0054 1A68     		ldr	r2, [r3]
+ 150              		.loc 1 103 16 view .LVU32
+ 151 0056 1C49     		ldr	r1, .L5+12
+ 152 0058 0A40     		ands	r2, r1
+ 153 005a 1A60     		str	r2, [r3]
+ 104:Src/main.c    ****   // Open-drain Output type
+ 105:Src/main.c    ****   GPIOB->OTYPER |= GPIO_OTYPER_OT_13;
+ 154              		.loc 1 105 3 is_stmt 1 view .LVU33
+ 155              		.loc 1 105 8 is_stmt 0 view .LVU34
+ 156 005c 5968     		ldr	r1, [r3, #4]
+ 157              		.loc 1 105 17 view .LVU35
+ 158 005e 8022     		movs	r2, #128
+ 159 0060 9201     		lsls	r2, r2, #6
+ 160 0062 0A43     		orrs	r2, r1
+ 161 0064 5A60     		str	r2, [r3, #4]
+ 106:Src/main.c    ****   // Select I2C2_SCL as its alternate function.
+ 107:Src/main.c    ****   GPIOB->AFR[1] |= (5 << 20);
+ 162              		.loc 1 107 3 is_stmt 1 view .LVU36
+ 163              		.loc 1 107 13 is_stmt 0 view .LVU37
+ 164 0066 596A     		ldr	r1, [r3, #36]
+ 165              		.loc 1 107 17 view .LVU38
+ 166 0068 A022     		movs	r2, #160
+ 167 006a D203     		lsls	r2, r2, #15
+ 168 006c 0A43     		orrs	r2, r1
+ 169 006e 5A62     		str	r2, [r3, #36]
+ 108:Src/main.c    **** 
+ 109:Src/main.c    ****   // Set PB14.
+ 110:Src/main.c    ****   // Output mode
+ 111:Src/main.c    ****   GPIOB->MODER &= ~GPIO_MODER_MODER14_1;
+ 170              		.loc 1 111 3 is_stmt 1 view .LVU39
+ 171              		.loc 1 111 8 is_stmt 0 view .LVU40
+ 172 0070 1A68     		ldr	r2, [r3]
+ 173              		.loc 1 111 16 view .LVU41
+ 174 0072 1649     		ldr	r1, .L5+16
+ 175 0074 0A40     		ands	r2, r1
+ 176 0076 1A60     		str	r2, [r3]
+ 112:Src/main.c    ****   GPIOB->MODER |= GPIO_MODER_MODER14_0;
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 6
+
+
+ 177              		.loc 1 112 3 is_stmt 1 view .LVU42
+ 178              		.loc 1 112 8 is_stmt 0 view .LVU43
+ 179 0078 1968     		ldr	r1, [r3]
+ 180              		.loc 1 112 16 view .LVU44
+ 181 007a 8022     		movs	r2, #128
+ 182 007c 5205     		lsls	r2, r2, #21
+ 183 007e 0A43     		orrs	r2, r1
+ 184 0080 1A60     		str	r2, [r3]
+ 113:Src/main.c    ****   // Push-Pull output type
+ 114:Src/main.c    ****   GPIOB->OTYPER &= ~GPIO_OTYPER_OT_14;
+ 185              		.loc 1 114 3 is_stmt 1 view .LVU45
+ 186              		.loc 1 114 8 is_stmt 0 view .LVU46
+ 187 0082 5A68     		ldr	r2, [r3, #4]
+ 188              		.loc 1 114 17 view .LVU47
+ 189 0084 1249     		ldr	r1, .L5+20
+ 190 0086 0A40     		ands	r2, r1
+ 191 0088 5A60     		str	r2, [r3, #4]
+ 115:Src/main.c    ****   // Initialize/set the pin high.
+ 116:Src/main.c    ****   GPIOB->ODR |= GPIO_ODR_14;
+ 192              		.loc 1 116 3 is_stmt 1 view .LVU48
+ 193              		.loc 1 116 8 is_stmt 0 view .LVU49
+ 194 008a 5969     		ldr	r1, [r3, #20]
+ 195              		.loc 1 116 14 view .LVU50
+ 196 008c 8022     		movs	r2, #128
+ 197 008e D201     		lsls	r2, r2, #7
+ 198 0090 0A43     		orrs	r2, r1
+ 199 0092 5A61     		str	r2, [r3, #20]
+ 117:Src/main.c    **** 
+ 118:Src/main.c    ****   // Set PC0.
+ 119:Src/main.c    ****   // Output mode
+ 120:Src/main.c    ****   GPIOC->MODER &= ~GPIO_MODER_MODER0_1;
+ 200              		.loc 1 120 3 is_stmt 1 view .LVU51
+ 201              		.loc 1 120 8 is_stmt 0 view .LVU52
+ 202 0094 2268     		ldr	r2, [r4]
+ 203              		.loc 1 120 16 view .LVU53
+ 204 0096 0221     		movs	r1, #2
+ 205 0098 8A43     		bics	r2, r1
+ 206 009a 2260     		str	r2, [r4]
+ 121:Src/main.c    ****   GPIOC->MODER |= GPIO_MODER_MODER0_0;
+ 207              		.loc 1 121 3 is_stmt 1 view .LVU54
+ 208              		.loc 1 121 8 is_stmt 0 view .LVU55
+ 209 009c 2268     		ldr	r2, [r4]
+ 210              		.loc 1 121 16 view .LVU56
+ 211 009e 2A43     		orrs	r2, r5
+ 212 00a0 2260     		str	r2, [r4]
+ 122:Src/main.c    ****   // Push-Pull Output type
+ 123:Src/main.c    ****   GPIOC->OTYPER &= ~GPIO_OTYPER_OT_0;
+ 213              		.loc 1 123 3 is_stmt 1 view .LVU57
+ 214              		.loc 1 123 8 is_stmt 0 view .LVU58
+ 215 00a2 6268     		ldr	r2, [r4, #4]
+ 216              		.loc 1 123 17 view .LVU59
+ 217 00a4 AA43     		bics	r2, r5
+ 218 00a6 6260     		str	r2, [r4, #4]
+ 124:Src/main.c    ****   // Initialize/set the pin high.
+ 125:Src/main.c    ****   GPIOC->ODR |= GPIO_ODR_0;
+ 219              		.loc 1 125 3 is_stmt 1 view .LVU60
+ 220              		.loc 1 125 8 is_stmt 0 view .LVU61
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 7
+
+
+ 221 00a8 6269     		ldr	r2, [r4, #20]
+ 222              		.loc 1 125 14 view .LVU62
+ 223 00aa 2A43     		orrs	r2, r5
+ 224 00ac 6261     		str	r2, [r4, #20]
+ 126:Src/main.c    **** 
+ 127:Src/main.c    ****   // Set PB15.
+ 128:Src/main.c    ****   GPIOB->MODER &= ~(GPIO_MODER_MODER15_1 | GPIO_MODER_MODER15_0);
+ 225              		.loc 1 128 3 is_stmt 1 view .LVU63
+ 226              		.loc 1 128 8 is_stmt 0 view .LVU64
+ 227 00ae 1A68     		ldr	r2, [r3]
+ 228              		.loc 1 128 16 view .LVU65
+ 229 00b0 9200     		lsls	r2, r2, #2
+ 230 00b2 9208     		lsrs	r2, r2, #2
+ 231 00b4 1A60     		str	r2, [r3]
+ 129:Src/main.c    **** }
+ 232              		.loc 1 129 1 view .LVU66
+ 233 00b6 07B0     		add	sp, sp, #28
+ 234              		@ sp needed
+ 235 00b8 30BD     		pop	{r4, r5, pc}
+ 236              	.L6:
+ 237 00ba C046     		.align	2
+ 238              	.L5:
+ 239 00bc 00080048 		.word	1207961600
+ 240 00c0 00040048 		.word	1207960576
+ 241 00c4 FFFFBFFF 		.word	-4194305
+ 242 00c8 FFFFFFFB 		.word	-67108865
+ 243 00cc FFFFFFDF 		.word	-536870913
+ 244 00d0 FFBFFFFF 		.word	-16385
+ 245              		.cfi_endproc
+ 246              	.LFE44:
+ 248              		.section	.text.SetI2CPeripheral,"ax",%progbits
+ 249              		.align	1
+ 250              		.global	SetI2CPeripheral
+ 251              		.syntax unified
+ 252              		.code	16
+ 253              		.thumb_func
+ 255              	SetI2CPeripheral:
+ 256              	.LFB45:
+ 130:Src/main.c    **** 
+ 131:Src/main.c    **** void SetI2CPeripheral()
+ 132:Src/main.c    **** {
+ 257              		.loc 1 132 1 is_stmt 1 view -0
+ 258              		.cfi_startproc
+ 259              		@ args = 0, pretend = 0, frame = 0
+ 260              		@ frame_needed = 0, uses_anonymous_args = 0
+ 261              		@ link register save eliminated.
+ 133:Src/main.c    ****   /* 5.3 Initializing the I2C Peripheral */
+ 134:Src/main.c    ****   // Set the parameters in the TIMINGR register to use 100 kHz standard-mode I2C.
+ 135:Src/main.c    ****   I2C2->TIMINGR |= (1 << 28);     // PRESC
+ 262              		.loc 1 135 3 view .LVU68
+ 263              		.loc 1 135 7 is_stmt 0 view .LVU69
+ 264 0000 0E4B     		ldr	r3, .L8
+ 265 0002 1969     		ldr	r1, [r3, #16]
+ 266              		.loc 1 135 17 view .LVU70
+ 267 0004 8022     		movs	r2, #128
+ 268 0006 5205     		lsls	r2, r2, #21
+ 269 0008 0A43     		orrs	r2, r1
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 8
+
+
+ 270 000a 1A61     		str	r2, [r3, #16]
+ 136:Src/main.c    ****   I2C2->TIMINGR |= (0x13 << 0);   // SCLL 
+ 271              		.loc 1 136 3 is_stmt 1 view .LVU71
+ 272              		.loc 1 136 7 is_stmt 0 view .LVU72
+ 273 000c 1A69     		ldr	r2, [r3, #16]
+ 274              		.loc 1 136 17 view .LVU73
+ 275 000e 1321     		movs	r1, #19
+ 276 0010 0A43     		orrs	r2, r1
+ 277 0012 1A61     		str	r2, [r3, #16]
+ 137:Src/main.c    ****   I2C2->TIMINGR |= (0xF << 8);    // SCLH 
+ 278              		.loc 1 137 3 is_stmt 1 view .LVU74
+ 279              		.loc 1 137 7 is_stmt 0 view .LVU75
+ 280 0014 1969     		ldr	r1, [r3, #16]
+ 281              		.loc 1 137 17 view .LVU76
+ 282 0016 F022     		movs	r2, #240
+ 283 0018 1201     		lsls	r2, r2, #4
+ 284 001a 0A43     		orrs	r2, r1
+ 285 001c 1A61     		str	r2, [r3, #16]
+ 138:Src/main.c    ****   I2C2->TIMINGR |= (0x2 << 16);   // SDADEL 
+ 286              		.loc 1 138 3 is_stmt 1 view .LVU77
+ 287              		.loc 1 138 7 is_stmt 0 view .LVU78
+ 288 001e 1969     		ldr	r1, [r3, #16]
+ 289              		.loc 1 138 17 view .LVU79
+ 290 0020 8022     		movs	r2, #128
+ 291 0022 9202     		lsls	r2, r2, #10
+ 292 0024 0A43     		orrs	r2, r1
+ 293 0026 1A61     		str	r2, [r3, #16]
+ 139:Src/main.c    ****   I2C2->TIMINGR |= (0x4 << 20);   // SCADEL 
+ 294              		.loc 1 139 3 is_stmt 1 view .LVU80
+ 295              		.loc 1 139 7 is_stmt 0 view .LVU81
+ 296 0028 1969     		ldr	r1, [r3, #16]
+ 297              		.loc 1 139 17 view .LVU82
+ 298 002a 8022     		movs	r2, #128
+ 299 002c D203     		lsls	r2, r2, #15
+ 300 002e 0A43     		orrs	r2, r1
+ 301 0030 1A61     		str	r2, [r3, #16]
+ 140:Src/main.c    **** 
+ 141:Src/main.c    ****   // Enable the I2C peripheral using the PE bit in the CR1 register.
+ 142:Src/main.c    ****   I2C2->CR1 |= I2C_CR1_PE;
+ 302              		.loc 1 142 3 is_stmt 1 view .LVU83
+ 303              		.loc 1 142 7 is_stmt 0 view .LVU84
+ 304 0032 1A68     		ldr	r2, [r3]
+ 305              		.loc 1 142 13 view .LVU85
+ 306 0034 0121     		movs	r1, #1
+ 307 0036 0A43     		orrs	r2, r1
+ 308 0038 1A60     		str	r2, [r3]
+ 143:Src/main.c    **** }
+ 309              		.loc 1 143 1 view .LVU86
+ 310              		@ sp needed
+ 311 003a 7047     		bx	lr
+ 312              	.L9:
+ 313              		.align	2
+ 314              	.L8:
+ 315 003c 00580040 		.word	1073764352
+ 316              		.cfi_endproc
+ 317              	.LFE45:
+ 319              		.section	.text.SetupI2CParameters,"ax",%progbits
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 9
+
+
+ 320              		.align	1
+ 321              		.global	SetupI2CParameters
+ 322              		.syntax unified
+ 323              		.code	16
+ 324              		.thumb_func
+ 326              	SetupI2CParameters:
+ 327              	.LVL2:
+ 328              	.LFB46:
+ 144:Src/main.c    **** 
+ 145:Src/main.c    **** void SetupI2CParameters(unsigned int num_of_data_byte)
+ 146:Src/main.c    **** {
+ 329              		.loc 1 146 1 is_stmt 1 view -0
+ 330              		.cfi_startproc
+ 331              		@ args = 0, pretend = 0, frame = 0
+ 332              		@ frame_needed = 0, uses_anonymous_args = 0
+ 333              		@ link register save eliminated.
+ 147:Src/main.c    ****   // Set the transaction parameters in the CR2 register. (Do not set the AUTOEND bit.)
+ 148:Src/main.c    ****   // Clear the NBYTES and SADD bit fields.
+ 149:Src/main.c    ****   // The NBYTES field begins at bit 16, and the SADD at bit 0.
+ 150:Src/main.c    ****   I2C2->CR2 &= ~((0x7F << 16) | (0x3FF << 0));
+ 334              		.loc 1 150 3 view .LVU88
+ 335              		.loc 1 150 7 is_stmt 0 view .LVU89
+ 336 0000 114B     		ldr	r3, .L15
+ 337 0002 5A68     		ldr	r2, [r3, #4]
+ 338              		.loc 1 150 13 view .LVU90
+ 339 0004 1149     		ldr	r1, .L15+4
+ 340 0006 0A40     		ands	r2, r1
+ 341 0008 5A60     		str	r2, [r3, #4]
+ 151:Src/main.c    ****   // 1. Set the slave address in the SADD[7:1] bit field.
+ 152:Src/main.c    ****   I2C2->CR2 |= (0x69 << 1);
+ 342              		.loc 1 152 3 is_stmt 1 view .LVU91
+ 343              		.loc 1 152 7 is_stmt 0 view .LVU92
+ 344 000a 5A68     		ldr	r2, [r3, #4]
+ 345              		.loc 1 152 13 view .LVU93
+ 346 000c D221     		movs	r1, #210
+ 347 000e 0A43     		orrs	r2, r1
+ 348 0010 5A60     		str	r2, [r3, #4]
+ 153:Src/main.c    **** 
+ 154:Src/main.c    ****   // 2. Set the number of data byte to be transmitted in the NBYTES[7:0] bit field.
+ 155:Src/main.c    ****   if (num_of_data_byte == 1) {
+ 349              		.loc 1 155 3 is_stmt 1 view .LVU94
+ 350              		.loc 1 155 6 is_stmt 0 view .LVU95
+ 351 0012 0128     		cmp	r0, #1
+ 352 0014 02D0     		beq	.L13
+ 156:Src/main.c    ****     I2C2->CR2 &= ~(1 << 17);
+ 157:Src/main.c    ****     I2C2->CR2 |= (1 << 16);
+ 158:Src/main.c    ****   }
+ 159:Src/main.c    ****   else if (num_of_data_byte == 2) {
+ 353              		.loc 1 159 8 is_stmt 1 view .LVU96
+ 354              		.loc 1 159 11 is_stmt 0 view .LVU97
+ 355 0016 0228     		cmp	r0, #2
+ 356 0018 0AD0     		beq	.L14
+ 357              	.L10:
+ 160:Src/main.c    ****     I2C2->CR2 |= (1 << 17);
+ 161:Src/main.c    ****     I2C2->CR2 &= ~(1 << 16);
+ 162:Src/main.c    ****   }
+ 163:Src/main.c    **** }
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 10
+
+
+ 358              		.loc 1 163 1 view .LVU98
+ 359              		@ sp needed
+ 360 001a 7047     		bx	lr
+ 361              	.L13:
+ 156:Src/main.c    ****     I2C2->CR2 &= ~(1 << 17);
+ 362              		.loc 1 156 5 is_stmt 1 view .LVU99
+ 156:Src/main.c    ****     I2C2->CR2 &= ~(1 << 17);
+ 363              		.loc 1 156 9 is_stmt 0 view .LVU100
+ 364 001c 5A68     		ldr	r2, [r3, #4]
+ 156:Src/main.c    ****     I2C2->CR2 &= ~(1 << 17);
+ 365              		.loc 1 156 15 view .LVU101
+ 366 001e 0C49     		ldr	r1, .L15+8
+ 367 0020 0A40     		ands	r2, r1
+ 368 0022 5A60     		str	r2, [r3, #4]
+ 157:Src/main.c    ****   }
+ 369              		.loc 1 157 5 is_stmt 1 view .LVU102
+ 157:Src/main.c    ****   }
+ 370              		.loc 1 157 9 is_stmt 0 view .LVU103
+ 371 0024 5968     		ldr	r1, [r3, #4]
+ 157:Src/main.c    ****   }
+ 372              		.loc 1 157 15 view .LVU104
+ 373 0026 8022     		movs	r2, #128
+ 374 0028 5202     		lsls	r2, r2, #9
+ 375 002a 0A43     		orrs	r2, r1
+ 376 002c 5A60     		str	r2, [r3, #4]
+ 377 002e F4E7     		b	.L10
+ 378              	.L14:
+ 160:Src/main.c    ****     I2C2->CR2 |= (1 << 17);
+ 379              		.loc 1 160 5 is_stmt 1 view .LVU105
+ 160:Src/main.c    ****     I2C2->CR2 |= (1 << 17);
+ 380              		.loc 1 160 9 is_stmt 0 view .LVU106
+ 381 0030 054B     		ldr	r3, .L15
+ 382 0032 5968     		ldr	r1, [r3, #4]
+ 160:Src/main.c    ****     I2C2->CR2 |= (1 << 17);
+ 383              		.loc 1 160 15 view .LVU107
+ 384 0034 8022     		movs	r2, #128
+ 385 0036 9202     		lsls	r2, r2, #10
+ 386 0038 0A43     		orrs	r2, r1
+ 387 003a 5A60     		str	r2, [r3, #4]
+ 161:Src/main.c    ****   }
+ 388              		.loc 1 161 5 is_stmt 1 view .LVU108
+ 161:Src/main.c    ****   }
+ 389              		.loc 1 161 9 is_stmt 0 view .LVU109
+ 390 003c 5A68     		ldr	r2, [r3, #4]
+ 161:Src/main.c    ****   }
+ 391              		.loc 1 161 15 view .LVU110
+ 392 003e 0549     		ldr	r1, .L15+12
+ 393 0040 0A40     		ands	r2, r1
+ 394 0042 5A60     		str	r2, [r3, #4]
+ 395              		.loc 1 163 1 view .LVU111
+ 396 0044 E9E7     		b	.L10
+ 397              	.L16:
+ 398 0046 C046     		.align	2
+ 399              	.L15:
+ 400 0048 00580040 		.word	1073764352
+ 401 004c 00FC80FF 		.word	-8324096
+ 402 0050 FFFFFDFF 		.word	-131073
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 11
+
+
+ 403 0054 FFFFFEFF 		.word	-65537
+ 404              		.cfi_endproc
+ 405              	.LFE46:
+ 407              		.section	.text.IsReadingReceived,"ax",%progbits
+ 408              		.align	1
+ 409              		.global	IsReadingReceived
+ 410              		.syntax unified
+ 411              		.code	16
+ 412              		.thumb_func
+ 414              	IsReadingReceived:
+ 415              	.LFB47:
+ 164:Src/main.c    **** 
+ 165:Src/main.c    **** void IsReadingReceived()
+ 166:Src/main.c    **** {
+ 416              		.loc 1 166 1 is_stmt 1 view -0
+ 417              		.cfi_startproc
+ 418              		@ args = 0, pretend = 0, frame = 0
+ 419              		@ frame_needed = 0, uses_anonymous_args = 0
+ 420 0000 10B5     		push	{r4, lr}
+ 421              	.LCFI2:
+ 422              		.cfi_def_cfa_offset 8
+ 423              		.cfi_offset 4, -8
+ 424              		.cfi_offset 14, -4
+ 167:Src/main.c    ****   // Wait until either of the RXNE (Receive Register Not Empty) or NACKF (Slave Not-Acknowledge) fl
+ 168:Src/main.c    ****   while (!(I2C2->ISR & I2C_ISR_RXNE)) {
+ 425              		.loc 1 168 3 view .LVU113
+ 426              	.L19:
+ 427              		.loc 1 168 10 view .LVU114
+ 428              		.loc 1 168 16 is_stmt 0 view .LVU115
+ 429 0002 074B     		ldr	r3, .L23
+ 430 0004 9B69     		ldr	r3, [r3, #24]
+ 431              		.loc 1 168 10 view .LVU116
+ 432 0006 5B07     		lsls	r3, r3, #29
+ 433 0008 09D4     		bmi	.L22
+ 169:Src/main.c    ****     // The NACKF flag should not be set.
+ 170:Src/main.c    ****     if (I2C2->ISR & I2C_ISR_NACKF) {
+ 434              		.loc 1 170 5 is_stmt 1 view .LVU117
+ 435              		.loc 1 170 13 is_stmt 0 view .LVU118
+ 436 000a 054B     		ldr	r3, .L23
+ 437 000c 9B69     		ldr	r3, [r3, #24]
+ 438              		.loc 1 170 8 view .LVU119
+ 439 000e DB06     		lsls	r3, r3, #27
+ 440 0010 F7D5     		bpl	.L19
+ 171:Src/main.c    ****       // Turn the LED on when the flag is set.
+ 172:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+ 441              		.loc 1 172 7 is_stmt 1 view .LVU120
+ 442 0012 0122     		movs	r2, #1
+ 443 0014 4021     		movs	r1, #64
+ 444 0016 0348     		ldr	r0, .L23+4
+ 445 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 446              	.LVL3:
+ 447 001c F1E7     		b	.L19
+ 448              	.L22:
+ 173:Src/main.c    ****     }
+ 174:Src/main.c    ****   } 
+ 175:Src/main.c    **** }
+ 449              		.loc 1 175 1 is_stmt 0 view .LVU121
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 12
+
+
+ 450              		@ sp needed
+ 451 001e 10BD     		pop	{r4, pc}
+ 452              	.L24:
+ 453              		.align	2
+ 454              	.L23:
+ 455 0020 00580040 		.word	1073764352
+ 456 0024 00080048 		.word	1207961600
+ 457              		.cfi_endproc
+ 458              	.LFE47:
+ 460              		.section	.text.SetI2CReadOrWrite,"ax",%progbits
+ 461              		.align	1
+ 462              		.global	SetI2CReadOrWrite
+ 463              		.syntax unified
+ 464              		.code	16
+ 465              		.thumb_func
+ 467              	SetI2CReadOrWrite:
+ 468              	.LVL4:
+ 469              	.LFB48:
+ 176:Src/main.c    **** 
+ 177:Src/main.c    **** void SetI2CReadOrWrite(unsigned int num_of_data_byte, bool read)
+ 178:Src/main.c    **** {
+ 470              		.loc 1 178 1 is_stmt 1 view -0
+ 471              		.cfi_startproc
+ 472              		@ args = 0, pretend = 0, frame = 0
+ 473              		@ frame_needed = 0, uses_anonymous_args = 0
+ 474              		.loc 1 178 1 is_stmt 0 view .LVU123
+ 475 0000 10B5     		push	{r4, lr}
+ 476              	.LCFI3:
+ 477              		.cfi_def_cfa_offset 8
+ 478              		.cfi_offset 4, -8
+ 479              		.cfi_offset 14, -4
+ 179:Src/main.c    ****   /* 5.4 Reading the Register (Part of it)*/ 
+ 180:Src/main.c    ****   // Set the transaction parameters in the CR2 register. (Do not set the AUTOEND bit.)
+ 181:Src/main.c    ****   // Clear the NBYTES and SADD bit fields.
+ 182:Src/main.c    ****   // The NBYTES field begins at bit 16, and the SADD at bit 0.
+ 183:Src/main.c    ****   I2C2->CR2 &= ~((0x7F << 16) | (0x3FF << 0));
+ 480              		.loc 1 183 3 is_stmt 1 view .LVU124
+ 481              		.loc 1 183 7 is_stmt 0 view .LVU125
+ 482 0002 1D4B     		ldr	r3, .L32
+ 483 0004 5A68     		ldr	r2, [r3, #4]
+ 484              		.loc 1 183 13 view .LVU126
+ 485 0006 1D4C     		ldr	r4, .L32+4
+ 486 0008 2240     		ands	r2, r4
+ 487 000a 5A60     		str	r2, [r3, #4]
+ 184:Src/main.c    ****   // 1. Set the slave address in the SADD[7:1] bit field.
+ 185:Src/main.c    ****   I2C2->CR2 |= (0x69 << 1);
+ 488              		.loc 1 185 3 is_stmt 1 view .LVU127
+ 489              		.loc 1 185 7 is_stmt 0 view .LVU128
+ 490 000c 5A68     		ldr	r2, [r3, #4]
+ 491              		.loc 1 185 13 view .LVU129
+ 492 000e D224     		movs	r4, #210
+ 493 0010 2243     		orrs	r2, r4
+ 494 0012 5A60     		str	r2, [r3, #4]
+ 186:Src/main.c    **** 
+ 187:Src/main.c    ****   // 2. Set the number of data byte to be transmitted in the NBYTES[7:0] bit field.
+ 188:Src/main.c    ****   if (num_of_data_byte == 1) {
+ 495              		.loc 1 188 3 is_stmt 1 view .LVU130
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 13
+
+
+ 496              		.loc 1 188 6 is_stmt 0 view .LVU131
+ 497 0014 0128     		cmp	r0, #1
+ 498 0016 0FD0     		beq	.L30
+ 189:Src/main.c    ****     I2C2->CR2 &= ~(1 << 17);
+ 190:Src/main.c    ****     I2C2->CR2 |= (1 << 16);
+ 191:Src/main.c    ****   }
+ 192:Src/main.c    ****   else if (num_of_data_byte == 2) {
+ 499              		.loc 1 192 8 is_stmt 1 view .LVU132
+ 500              		.loc 1 192 11 is_stmt 0 view .LVU133
+ 501 0018 0228     		cmp	r0, #2
+ 502 001a 17D0     		beq	.L31
+ 503              	.LVL5:
+ 504              	.L27:
+ 193:Src/main.c    ****     I2C2->CR2 |= (1 << 17);
+ 194:Src/main.c    ****     I2C2->CR2 &= ~(1 << 16);
+ 195:Src/main.c    ****   }
+ 196:Src/main.c    **** 
+ 197:Src/main.c    ****   // 3. Configure the RD_WRN to indicate a read/write operation.
+ 198:Src/main.c    ****   // 4. Setting the START bit to begin the address frame.
+ 199:Src/main.c    ****   if (read) {
+ 505              		.loc 1 199 3 is_stmt 1 view .LVU134
+ 506              		.loc 1 199 6 is_stmt 0 view .LVU135
+ 507 001c 0029     		cmp	r1, #0
+ 508 001e 20D0     		beq	.L28
+ 200:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_RD_WRN;
+ 509              		.loc 1 200 5 is_stmt 1 view .LVU136
+ 510              		.loc 1 200 9 is_stmt 0 view .LVU137
+ 511 0020 154B     		ldr	r3, .L32
+ 512 0022 5968     		ldr	r1, [r3, #4]
+ 513              	.LVL6:
+ 514              		.loc 1 200 15 view .LVU138
+ 515 0024 8022     		movs	r2, #128
+ 516 0026 D200     		lsls	r2, r2, #3
+ 517 0028 0A43     		orrs	r2, r1
+ 518 002a 5A60     		str	r2, [r3, #4]
+ 201:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_START;
+ 519              		.loc 1 201 5 is_stmt 1 view .LVU139
+ 520              		.loc 1 201 9 is_stmt 0 view .LVU140
+ 521 002c 5968     		ldr	r1, [r3, #4]
+ 522              		.loc 1 201 15 view .LVU141
+ 523 002e 8022     		movs	r2, #128
+ 524 0030 9201     		lsls	r2, r2, #6
+ 525 0032 0A43     		orrs	r2, r1
+ 526 0034 5A60     		str	r2, [r3, #4]
+ 527              	.L25:
+ 202:Src/main.c    ****   }
+ 203:Src/main.c    ****   else // write transfer
+ 204:Src/main.c    ****   {
+ 205:Src/main.c    ****     I2C2->CR2 &= ~I2C_CR2_RD_WRN;
+ 206:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_START;
+ 207:Src/main.c    ****   }
+ 208:Src/main.c    **** }
+ 528              		.loc 1 208 1 view .LVU142
+ 529              		@ sp needed
+ 530 0036 10BD     		pop	{r4, pc}
+ 531              	.LVL7:
+ 532              	.L30:
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 14
+
+
+ 189:Src/main.c    ****     I2C2->CR2 |= (1 << 16);
+ 533              		.loc 1 189 5 is_stmt 1 view .LVU143
+ 189:Src/main.c    ****     I2C2->CR2 |= (1 << 16);
+ 534              		.loc 1 189 9 is_stmt 0 view .LVU144
+ 535 0038 5A68     		ldr	r2, [r3, #4]
+ 189:Src/main.c    ****     I2C2->CR2 |= (1 << 16);
+ 536              		.loc 1 189 15 view .LVU145
+ 537 003a 1148     		ldr	r0, .L32+8
+ 538              	.LVL8:
+ 189:Src/main.c    ****     I2C2->CR2 |= (1 << 16);
+ 539              		.loc 1 189 15 view .LVU146
+ 540 003c 0240     		ands	r2, r0
+ 541 003e 5A60     		str	r2, [r3, #4]
+ 190:Src/main.c    ****   }
+ 542              		.loc 1 190 5 is_stmt 1 view .LVU147
+ 190:Src/main.c    ****   }
+ 543              		.loc 1 190 9 is_stmt 0 view .LVU148
+ 544 0040 5868     		ldr	r0, [r3, #4]
+ 190:Src/main.c    ****   }
+ 545              		.loc 1 190 15 view .LVU149
+ 546 0042 8022     		movs	r2, #128
+ 547 0044 5202     		lsls	r2, r2, #9
+ 548 0046 0243     		orrs	r2, r0
+ 549 0048 5A60     		str	r2, [r3, #4]
+ 550 004a E7E7     		b	.L27
+ 551              	.LVL9:
+ 552              	.L31:
+ 193:Src/main.c    ****     I2C2->CR2 &= ~(1 << 16);
+ 553              		.loc 1 193 5 is_stmt 1 view .LVU150
+ 193:Src/main.c    ****     I2C2->CR2 &= ~(1 << 16);
+ 554              		.loc 1 193 9 is_stmt 0 view .LVU151
+ 555 004c 0A4B     		ldr	r3, .L32
+ 556 004e 5868     		ldr	r0, [r3, #4]
+ 557              	.LVL10:
+ 193:Src/main.c    ****     I2C2->CR2 &= ~(1 << 16);
+ 558              		.loc 1 193 15 view .LVU152
+ 559 0050 8022     		movs	r2, #128
+ 560 0052 9202     		lsls	r2, r2, #10
+ 561 0054 0243     		orrs	r2, r0
+ 562 0056 5A60     		str	r2, [r3, #4]
+ 194:Src/main.c    ****   }
+ 563              		.loc 1 194 5 is_stmt 1 view .LVU153
+ 194:Src/main.c    ****   }
+ 564              		.loc 1 194 9 is_stmt 0 view .LVU154
+ 565 0058 5A68     		ldr	r2, [r3, #4]
+ 194:Src/main.c    ****   }
+ 566              		.loc 1 194 15 view .LVU155
+ 567 005a 0A48     		ldr	r0, .L32+12
+ 568 005c 0240     		ands	r2, r0
+ 569 005e 5A60     		str	r2, [r3, #4]
+ 570 0060 DCE7     		b	.L27
+ 571              	.L28:
+ 205:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_START;
+ 572              		.loc 1 205 5 is_stmt 1 view .LVU156
+ 205:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_START;
+ 573              		.loc 1 205 9 is_stmt 0 view .LVU157
+ 574 0062 054B     		ldr	r3, .L32
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 15
+
+
+ 575 0064 5A68     		ldr	r2, [r3, #4]
+ 205:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_START;
+ 576              		.loc 1 205 15 view .LVU158
+ 577 0066 0849     		ldr	r1, .L32+16
+ 578              	.LVL11:
+ 205:Src/main.c    ****     I2C2->CR2 |= I2C_CR2_START;
+ 579              		.loc 1 205 15 view .LVU159
+ 580 0068 0A40     		ands	r2, r1
+ 581 006a 5A60     		str	r2, [r3, #4]
+ 206:Src/main.c    ****   }
+ 582              		.loc 1 206 5 is_stmt 1 view .LVU160
+ 206:Src/main.c    ****   }
+ 583              		.loc 1 206 9 is_stmt 0 view .LVU161
+ 584 006c 5968     		ldr	r1, [r3, #4]
+ 206:Src/main.c    ****   }
+ 585              		.loc 1 206 15 view .LVU162
+ 586 006e 8022     		movs	r2, #128
+ 587 0070 9201     		lsls	r2, r2, #6
+ 588 0072 0A43     		orrs	r2, r1
+ 589 0074 5A60     		str	r2, [r3, #4]
+ 590              		.loc 1 208 1 view .LVU163
+ 591 0076 DEE7     		b	.L25
+ 592              	.L33:
+ 593              		.align	2
+ 594              	.L32:
+ 595 0078 00580040 		.word	1073764352
+ 596 007c 00FC80FF 		.word	-8324096
+ 597 0080 FFFFFDFF 		.word	-131073
+ 598 0084 FFFFFEFF 		.word	-65537
+ 599 0088 FFFBFFFF 		.word	-1025
+ 600              		.cfi_endproc
+ 601              	.LFE48:
+ 603              		.section	.text.IsTransferComplete,"ax",%progbits
+ 604              		.align	1
+ 605              		.global	IsTransferComplete
+ 606              		.syntax unified
+ 607              		.code	16
+ 608              		.thumb_func
+ 610              	IsTransferComplete:
+ 611              	.LFB49:
+ 209:Src/main.c    **** 
+ 210:Src/main.c    **** 
+ 211:Src/main.c    **** /* Condition Check Functions */
+ 212:Src/main.c    **** void IsTransferComplete()
+ 213:Src/main.c    **** {
+ 612              		.loc 1 213 1 is_stmt 1 view -0
+ 613              		.cfi_startproc
+ 614              		@ args = 0, pretend = 0, frame = 0
+ 615              		@ frame_needed = 0, uses_anonymous_args = 0
+ 616              		@ link register save eliminated.
+ 617              	.L35:
+ 214:Src/main.c    ****   // Wait until the TC (Transfer Complete) flag is set.
+ 215:Src/main.c    ****   while (!(I2C2->ISR & I2C_ISR_TC));
+ 618              		.loc 1 215 10 discriminator 1 view .LVU165
+ 619              		.loc 1 215 16 is_stmt 0 discriminator 1 view .LVU166
+ 620 0000 024B     		ldr	r3, .L37
+ 621 0002 9B69     		ldr	r3, [r3, #24]
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 16
+
+
+ 622              		.loc 1 215 10 discriminator 1 view .LVU167
+ 623 0004 5B06     		lsls	r3, r3, #25
+ 624 0006 FBD5     		bpl	.L35
+ 216:Src/main.c    **** }
+ 625              		.loc 1 216 1 view .LVU168
+ 626              		@ sp needed
+ 627 0008 7047     		bx	lr
+ 628              	.L38:
+ 629 000a C046     		.align	2
+ 630              	.L37:
+ 631 000c 00580040 		.word	1073764352
+ 632              		.cfi_endproc
+ 633              	.LFE49:
+ 635              		.section	.text.IsTransmitReady,"ax",%progbits
+ 636              		.align	1
+ 637              		.global	IsTransmitReady
+ 638              		.syntax unified
+ 639              		.code	16
+ 640              		.thumb_func
+ 642              	IsTransmitReady:
+ 643              	.LFB50:
+ 217:Src/main.c    **** 
+ 218:Src/main.c    **** void IsTransmitReady()
+ 219:Src/main.c    **** {
+ 644              		.loc 1 219 1 is_stmt 1 view -0
+ 645              		.cfi_startproc
+ 646              		@ args = 0, pretend = 0, frame = 0
+ 647              		@ frame_needed = 0, uses_anonymous_args = 0
+ 648 0000 10B5     		push	{r4, lr}
+ 649              	.LCFI4:
+ 650              		.cfi_def_cfa_offset 8
+ 651              		.cfi_offset 4, -8
+ 652              		.cfi_offset 14, -4
+ 220:Src/main.c    ****   // Wait until either of the TXIS (Transmit Register Empty/Ready) or NACKF (Slave Not-Acknowledge)
+ 221:Src/main.c    ****   while (!(I2C2->ISR & I2C_ISR_TXIS)) {
+ 653              		.loc 1 221 3 view .LVU170
+ 654              	.L41:
+ 655              		.loc 1 221 10 view .LVU171
+ 656              		.loc 1 221 16 is_stmt 0 view .LVU172
+ 657 0002 074B     		ldr	r3, .L45
+ 658 0004 9B69     		ldr	r3, [r3, #24]
+ 659              		.loc 1 221 10 view .LVU173
+ 660 0006 9B07     		lsls	r3, r3, #30
+ 661 0008 09D4     		bmi	.L44
+ 222:Src/main.c    ****     // The NACKF flag should not be set.
+ 223:Src/main.c    ****     if (I2C2->ISR & I2C_ISR_NACKF) {
+ 662              		.loc 1 223 5 is_stmt 1 view .LVU174
+ 663              		.loc 1 223 13 is_stmt 0 view .LVU175
+ 664 000a 054B     		ldr	r3, .L45
+ 665 000c 9B69     		ldr	r3, [r3, #24]
+ 666              		.loc 1 223 8 view .LVU176
+ 667 000e DB06     		lsls	r3, r3, #27
+ 668 0010 F7D5     		bpl	.L41
+ 224:Src/main.c    ****       // Turn the LED on when the flag is set.
+ 225:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+ 669              		.loc 1 225 7 is_stmt 1 view .LVU177
+ 670 0012 0122     		movs	r2, #1
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 17
+
+
+ 671 0014 4021     		movs	r1, #64
+ 672 0016 0348     		ldr	r0, .L45+4
+ 673 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 674              	.LVL12:
+ 675 001c F1E7     		b	.L41
+ 676              	.L44:
+ 226:Src/main.c    ****     }
+ 227:Src/main.c    ****   } 
+ 228:Src/main.c    **** }
+ 677              		.loc 1 228 1 is_stmt 0 view .LVU178
+ 678              		@ sp needed
+ 679 001e 10BD     		pop	{r4, pc}
+ 680              	.L46:
+ 681              		.align	2
+ 682              	.L45:
+ 683 0020 00580040 		.word	1073764352
+ 684 0024 00080048 		.word	1207961600
+ 685              		.cfi_endproc
+ 686              	.LFE50:
+ 688              		.section	.text.Part1,"ax",%progbits
+ 689              		.align	1
+ 690              		.global	Part1
+ 691              		.syntax unified
+ 692              		.code	16
+ 693              		.thumb_func
+ 695              	Part1:
+ 696              	.LFB51:
+ 229:Src/main.c    **** 
+ 230:Src/main.c    **** 
+ 231:Src/main.c    **** void Part1()
+ 232:Src/main.c    **** {
+ 697              		.loc 1 232 1 is_stmt 1 view -0
+ 698              		.cfi_startproc
+ 699              		@ args = 0, pretend = 0, frame = 0
+ 700              		@ frame_needed = 0, uses_anonymous_args = 0
+ 701 0000 10B5     		push	{r4, lr}
+ 702              	.LCFI5:
+ 703              		.cfi_def_cfa_offset 8
+ 704              		.cfi_offset 4, -8
+ 705              		.cfi_offset 14, -4
+ 233:Src/main.c    ****   /* Setup */
+ 234:Src/main.c    ****   SetEnable();
+ 706              		.loc 1 234 3 view .LVU180
+ 707 0002 FFF7FEFF 		bl	SetEnable
+ 708              	.LVL13:
+ 235:Src/main.c    ****   SetGPIOModes();
+ 709              		.loc 1 235 3 view .LVU181
+ 710 0006 FFF7FEFF 		bl	SetGPIOModes
+ 711              	.LVL14:
+ 236:Src/main.c    ****   SetI2CPeripheral();
+ 712              		.loc 1 236 3 view .LVU182
+ 713 000a FFF7FEFF 		bl	SetI2CPeripheral
+ 714              	.LVL15:
+ 237:Src/main.c    **** 
+ 238:Src/main.c    ****   /* Write an address */
+ 239:Src/main.c    ****   SetI2CReadOrWrite(1, false); // write
+ 715              		.loc 1 239 3 view .LVU183
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 18
+
+
+ 716 000e 0021     		movs	r1, #0
+ 717 0010 0120     		movs	r0, #1
+ 718 0012 FFF7FEFF 		bl	SetI2CReadOrWrite
+ 719              	.LVL16:
+ 240:Src/main.c    ****   IsTransmitReady();
+ 720              		.loc 1 240 3 view .LVU184
+ 721 0016 FFF7FEFF 		bl	IsTransmitReady
+ 722              	.LVL17:
+ 241:Src/main.c    ****   // Write the address of the “WHO_AM_I” register into the I2C transmit register. (TXDR)
+ 242:Src/main.c    ****   I2C2->TXDR |= (0x0F << 0);
+ 723              		.loc 1 242 3 view .LVU185
+ 724              		.loc 1 242 7 is_stmt 0 view .LVU186
+ 725 001a 0F4C     		ldr	r4, .L50
+ 726 001c A36A     		ldr	r3, [r4, #40]
+ 727              		.loc 1 242 14 view .LVU187
+ 728 001e 0F22     		movs	r2, #15
+ 729 0020 1343     		orrs	r3, r2
+ 730 0022 A362     		str	r3, [r4, #40]
+ 243:Src/main.c    ****   IsTransferComplete();  
+ 731              		.loc 1 243 3 is_stmt 1 view .LVU188
+ 732 0024 FFF7FEFF 		bl	IsTransferComplete
+ 733              	.LVL18:
+ 244:Src/main.c    **** 
+ 245:Src/main.c    ****   /* Read a value in the written address */
+ 246:Src/main.c    ****   SetI2CReadOrWrite(1, true); // read
+ 734              		.loc 1 246 3 view .LVU189
+ 735 0028 0121     		movs	r1, #1
+ 736 002a 0120     		movs	r0, #1
+ 737 002c FFF7FEFF 		bl	SetI2CReadOrWrite
+ 738              	.LVL19:
+ 247:Src/main.c    ****   IsReadingReceived();
+ 739              		.loc 1 247 3 view .LVU190
+ 740 0030 FFF7FEFF 		bl	IsReadingReceived
+ 741              	.LVL20:
+ 248:Src/main.c    ****   IsTransferComplete();
+ 742              		.loc 1 248 3 view .LVU191
+ 743 0034 FFF7FEFF 		bl	IsTransferComplete
+ 744              	.LVL21:
+ 249:Src/main.c    **** 
+ 250:Src/main.c    ****   // Check the contents of the RXDR register to see if it matches 0xD3. (expected value of the “W
+ 251:Src/main.c    ****   if (I2C2->RXDR == 0xD3)
+ 745              		.loc 1 251 3 view .LVU192
+ 746              		.loc 1 251 11 is_stmt 0 view .LVU193
+ 747 0038 636A     		ldr	r3, [r4, #36]
+ 748              		.loc 1 251 6 view .LVU194
+ 749 003a D32B     		cmp	r3, #211
+ 750 003c 06D0     		beq	.L49
+ 751              	.L48:
+ 252:Src/main.c    ****     // Turn on the blue LED.
+ 253:Src/main.c    ****     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+ 254:Src/main.c    **** 
+ 255:Src/main.c    ****   // Set the STOP bit in the CR2 register to release the I2C bus.
+ 256:Src/main.c    ****   I2C2->CR2 |= I2C_CR2_STOP;
+ 752              		.loc 1 256 3 is_stmt 1 view .LVU195
+ 753              		.loc 1 256 7 is_stmt 0 view .LVU196
+ 754 003e 064A     		ldr	r2, .L50
+ 755 0040 5168     		ldr	r1, [r2, #4]
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 19
+
+
+ 756              		.loc 1 256 13 view .LVU197
+ 757 0042 8023     		movs	r3, #128
+ 758 0044 DB01     		lsls	r3, r3, #7
+ 759 0046 0B43     		orrs	r3, r1
+ 760 0048 5360     		str	r3, [r2, #4]
+ 257:Src/main.c    **** }
+ 761              		.loc 1 257 1 view .LVU198
+ 762              		@ sp needed
+ 763 004a 10BD     		pop	{r4, pc}
+ 764              	.L49:
+ 253:Src/main.c    **** 
+ 765              		.loc 1 253 5 is_stmt 1 view .LVU199
+ 766 004c 0122     		movs	r2, #1
+ 767 004e 8021     		movs	r1, #128
+ 768 0050 0248     		ldr	r0, .L50+4
+ 769 0052 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 770              	.LVL22:
+ 771 0056 F2E7     		b	.L48
+ 772              	.L51:
+ 773              		.align	2
+ 774              	.L50:
+ 775 0058 00580040 		.word	1073764352
+ 776 005c 00080048 		.word	1207961600
+ 777              		.cfi_endproc
+ 778              	.LFE51:
+ 780              		.section	.text.WriteGyroSensor,"ax",%progbits
+ 781              		.align	1
+ 782              		.global	WriteGyroSensor
+ 783              		.syntax unified
+ 784              		.code	16
+ 785              		.thumb_func
+ 787              	WriteGyroSensor:
+ 788              	.LFB52:
+ 258:Src/main.c    **** 
+ 259:Src/main.c    **** 
+ 260:Src/main.c    **** /* PART 2 START */
+ 261:Src/main.c    **** void WriteGyroSensor()
+ 262:Src/main.c    **** {
+ 789              		.loc 1 262 1 view -0
+ 790              		.cfi_startproc
+ 791              		@ args = 0, pretend = 0, frame = 0
+ 792              		@ frame_needed = 0, uses_anonymous_args = 0
+ 793 0000 10B5     		push	{r4, lr}
+ 794              	.LCFI6:
+ 795              		.cfi_def_cfa_offset 8
+ 796              		.cfi_offset 4, -8
+ 797              		.cfi_offset 14, -4
+ 263:Src/main.c    ****   /* 5.5 Initializing the Gyroscope */
+ 264:Src/main.c    ****   SetI2CReadOrWrite(2, false);
+ 798              		.loc 1 264 3 view .LVU201
+ 799 0002 0021     		movs	r1, #0
+ 800 0004 0220     		movs	r0, #2
+ 801 0006 FFF7FEFF 		bl	SetI2CReadOrWrite
+ 802              	.LVL23:
+ 265:Src/main.c    ****   IsTransmitReady();
+ 803              		.loc 1 265 3 view .LVU202
+ 804 000a FFF7FEFF 		bl	IsTransmitReady
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 20
+
+
+ 805              	.LVL24:
+ 266:Src/main.c    ****   
+ 267:Src/main.c    ****   // Write the address of the "CTRL_REG1" register into the I2C transmit register. (TXDR)
+ 268:Src/main.c    ****   I2C2->TXDR = 0x20;
+ 806              		.loc 1 268 3 view .LVU203
+ 807              		.loc 1 268 14 is_stmt 0 view .LVU204
+ 808 000e 054C     		ldr	r4, .L53
+ 809 0010 2023     		movs	r3, #32
+ 810 0012 A362     		str	r3, [r4, #40]
+ 269:Src/main.c    ****   IsTransmitReady();
+ 811              		.loc 1 269 3 is_stmt 1 view .LVU205
+ 812 0014 FFF7FEFF 		bl	IsTransmitReady
+ 813              	.LVL25:
+ 270:Src/main.c    **** 
+ 271:Src/main.c    ****   // Enable the X and Y sensing axes in the CTRL_REG1 register.
+ 272:Src/main.c    ****   // Set the sensor into "normal or sleep mode" using the PD bit in the CTRL_REG1 register.
+ 273:Src/main.c    ****   I2C2->TXDR = 0x0B; // PD == bit 3 (1011)
+ 814              		.loc 1 273 3 view .LVU206
+ 815              		.loc 1 273 14 is_stmt 0 view .LVU207
+ 816 0018 0B23     		movs	r3, #11
+ 817 001a A362     		str	r3, [r4, #40]
+ 274:Src/main.c    ****   IsTransferComplete();
+ 818              		.loc 1 274 3 is_stmt 1 view .LVU208
+ 819 001c FFF7FEFF 		bl	IsTransferComplete
+ 820              	.LVL26:
+ 275:Src/main.c    **** } 
+ 821              		.loc 1 275 1 is_stmt 0 view .LVU209
+ 822              		@ sp needed
+ 823 0020 10BD     		pop	{r4, pc}
+ 824              	.L54:
+ 825 0022 C046     		.align	2
+ 826              	.L53:
+ 827 0024 00580040 		.word	1073764352
+ 828              		.cfi_endproc
+ 829              	.LFE52:
+ 831              		.section	.text.ReadAndSaveSensorX,"ax",%progbits
+ 832              		.align	1
+ 833              		.global	ReadAndSaveSensorX
+ 834              		.syntax unified
+ 835              		.code	16
+ 836              		.thumb_func
+ 838              	ReadAndSaveSensorX:
+ 839              	.LFB53:
+ 276:Src/main.c    **** 
+ 277:Src/main.c    **** /* 5.6 Exercise Specifications */
+ 278:Src/main.c    **** void ReadAndSaveSensorX()
+ 279:Src/main.c    **** {
+ 840              		.loc 1 279 1 is_stmt 1 view -0
+ 841              		.cfi_startproc
+ 842              		@ args = 0, pretend = 0, frame = 0
+ 843              		@ frame_needed = 0, uses_anonymous_args = 0
+ 844 0000 70B5     		push	{r4, r5, r6, lr}
+ 845              	.LCFI7:
+ 846              		.cfi_def_cfa_offset 16
+ 847              		.cfi_offset 4, -16
+ 848              		.cfi_offset 5, -12
+ 849              		.cfi_offset 6, -8
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 21
+
+
+ 850              		.cfi_offset 14, -4
+ 280:Src/main.c    ****   /* Write an address */
+ 281:Src/main.c    ****   SetI2CReadOrWrite(1, false); // write 
+ 851              		.loc 1 281 3 view .LVU211
+ 852 0002 0021     		movs	r1, #0
+ 853 0004 0120     		movs	r0, #1
+ 854 0006 FFF7FEFF 		bl	SetI2CReadOrWrite
+ 855              	.LVL27:
+ 282:Src/main.c    ****   IsTransmitReady();
+ 856              		.loc 1 282 3 view .LVU212
+ 857 000a FFF7FEFF 		bl	IsTransmitReady
+ 858              	.LVL28:
+ 283:Src/main.c    ****   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
+ 284:Src/main.c    ****   I2C2->TXDR |= (0xA8 << 0);
+ 859              		.loc 1 284 3 view .LVU213
+ 860              		.loc 1 284 7 is_stmt 0 view .LVU214
+ 861 000e 0F4C     		ldr	r4, .L56
+ 862 0010 A36A     		ldr	r3, [r4, #40]
+ 863              		.loc 1 284 14 view .LVU215
+ 864 0012 A822     		movs	r2, #168
+ 865 0014 1343     		orrs	r3, r2
+ 866 0016 A362     		str	r3, [r4, #40]
+ 285:Src/main.c    ****   IsTransferComplete();
+ 867              		.loc 1 285 3 is_stmt 1 view .LVU216
+ 868 0018 FFF7FEFF 		bl	IsTransferComplete
+ 869              	.LVL29:
+ 286:Src/main.c    ****   I2C2->CR2 |= I2C_CR2_STOP;
+ 870              		.loc 1 286 3 view .LVU217
+ 871              		.loc 1 286 7 is_stmt 0 view .LVU218
+ 872 001c 6268     		ldr	r2, [r4, #4]
+ 873              		.loc 1 286 13 view .LVU219
+ 874 001e 8023     		movs	r3, #128
+ 875 0020 DB01     		lsls	r3, r3, #7
+ 876 0022 1343     		orrs	r3, r2
+ 877 0024 6360     		str	r3, [r4, #4]
+ 287:Src/main.c    **** 
+ 288:Src/main.c    ****   /* Read a value from X */
+ 289:Src/main.c    ****   // Initialize variables for X.
+ 290:Src/main.c    ****   char out_x_l, out_x_h; // 1 byte = 8 bits
+ 878              		.loc 1 290 3 is_stmt 1 view .LVU220
+ 291:Src/main.c    ****   SetI2CReadOrWrite(2, true);
+ 879              		.loc 1 291 3 view .LVU221
+ 880 0026 0121     		movs	r1, #1
+ 881 0028 0220     		movs	r0, #2
+ 882 002a FFF7FEFF 		bl	SetI2CReadOrWrite
+ 883              	.LVL30:
+ 292:Src/main.c    **** 
+ 293:Src/main.c    ****   IsReadingReceived();
+ 884              		.loc 1 293 3 view .LVU222
+ 885 002e FFF7FEFF 		bl	IsReadingReceived
+ 886              	.LVL31:
+ 294:Src/main.c    ****   out_x = I2C2->RXDR;
+ 887              		.loc 1 294 3 view .LVU223
+ 888              		.loc 1 294 15 is_stmt 0 view .LVU224
+ 889 0032 636A     		ldr	r3, [r4, #36]
+ 890              		.loc 1 294 9 view .LVU225
+ 891 0034 064D     		ldr	r5, .L56+4
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 22
+
+
+ 892 0036 2B80     		strh	r3, [r5]
+ 295:Src/main.c    **** 
+ 296:Src/main.c    ****   IsReadingReceived();
+ 893              		.loc 1 296 3 is_stmt 1 view .LVU226
+ 894 0038 FFF7FEFF 		bl	IsReadingReceived
+ 895              	.LVL32:
+ 297:Src/main.c    ****   out_x |= (I2C2->RXDR << 8);
+ 896              		.loc 1 297 3 view .LVU227
+ 897              		.loc 1 297 17 is_stmt 0 view .LVU228
+ 898 003c 636A     		ldr	r3, [r4, #36]
+ 899              		.loc 1 297 9 view .LVU229
+ 900 003e 1B02     		lsls	r3, r3, #8
+ 901 0040 2A88     		ldrh	r2, [r5]
+ 902 0042 1343     		orrs	r3, r2
+ 903 0044 2B80     		strh	r3, [r5]
+ 298:Src/main.c    ****   IsTransferComplete();
+ 904              		.loc 1 298 3 is_stmt 1 view .LVU230
+ 905 0046 FFF7FEFF 		bl	IsTransferComplete
+ 906              	.LVL33:
+ 299:Src/main.c    ****   
+ 300:Src/main.c    ****   // out_x = (out_x_h << 8) | out_x_l;
+ 301:Src/main.c    **** }
+ 907              		.loc 1 301 1 is_stmt 0 view .LVU231
+ 908              		@ sp needed
+ 909 004a 70BD     		pop	{r4, r5, r6, pc}
+ 910              	.L57:
+ 911              		.align	2
+ 912              	.L56:
+ 913 004c 00580040 		.word	1073764352
+ 914 0050 00000000 		.word	out_x
+ 915              		.cfi_endproc
+ 916              	.LFE53:
+ 918              		.section	.text.ReadAndSaveSensorY,"ax",%progbits
+ 919              		.align	1
+ 920              		.global	ReadAndSaveSensorY
+ 921              		.syntax unified
+ 922              		.code	16
+ 923              		.thumb_func
+ 925              	ReadAndSaveSensorY:
+ 926              	.LFB54:
+ 302:Src/main.c    **** 
+ 303:Src/main.c    **** void ReadAndSaveSensorY()
+ 304:Src/main.c    **** {
+ 927              		.loc 1 304 1 is_stmt 1 view -0
+ 928              		.cfi_startproc
+ 929              		@ args = 0, pretend = 0, frame = 0
+ 930              		@ frame_needed = 0, uses_anonymous_args = 0
+ 931 0000 70B5     		push	{r4, r5, r6, lr}
+ 932              	.LCFI8:
+ 933              		.cfi_def_cfa_offset 16
+ 934              		.cfi_offset 4, -16
+ 935              		.cfi_offset 5, -12
+ 936              		.cfi_offset 6, -8
+ 937              		.cfi_offset 14, -4
+ 305:Src/main.c    ****   /* Write an address */
+ 306:Src/main.c    ****   // Read and save the value of the X and Y axis data registers every 100ms.
+ 307:Src/main.c    ****   SetI2CReadOrWrite(1, false); // write
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 23
+
+
+ 938              		.loc 1 307 3 view .LVU233
+ 939 0002 0021     		movs	r1, #0
+ 940 0004 0120     		movs	r0, #1
+ 941 0006 FFF7FEFF 		bl	SetI2CReadOrWrite
+ 942              	.LVL34:
+ 308:Src/main.c    ****   IsTransmitReady();
+ 943              		.loc 1 308 3 view .LVU234
+ 944 000a FFF7FEFF 		bl	IsTransmitReady
+ 945              	.LVL35:
+ 309:Src/main.c    ****   // Write the address of X-Axis Data Registers. (OUT_X_L & OUT_X_H)
+ 310:Src/main.c    ****   I2C2->TXDR |= (0xAA << 0);
+ 946              		.loc 1 310 3 view .LVU235
+ 947              		.loc 1 310 7 is_stmt 0 view .LVU236
+ 948 000e 0F4C     		ldr	r4, .L59
+ 949 0010 A36A     		ldr	r3, [r4, #40]
+ 950              		.loc 1 310 14 view .LVU237
+ 951 0012 AA22     		movs	r2, #170
+ 952 0014 1343     		orrs	r3, r2
+ 953 0016 A362     		str	r3, [r4, #40]
+ 311:Src/main.c    ****   IsTransferComplete(); 
+ 954              		.loc 1 311 3 is_stmt 1 view .LVU238
+ 955 0018 FFF7FEFF 		bl	IsTransferComplete
+ 956              	.LVL36:
+ 312:Src/main.c    ****   I2C2->CR2 |= I2C_CR2_STOP;
+ 957              		.loc 1 312 3 view .LVU239
+ 958              		.loc 1 312 7 is_stmt 0 view .LVU240
+ 959 001c 6268     		ldr	r2, [r4, #4]
+ 960              		.loc 1 312 13 view .LVU241
+ 961 001e 8023     		movs	r3, #128
+ 962 0020 DB01     		lsls	r3, r3, #7
+ 963 0022 1343     		orrs	r3, r2
+ 964 0024 6360     		str	r3, [r4, #4]
+ 313:Src/main.c    **** 
+ 314:Src/main.c    ****   /* Read a value from Y */
+ 315:Src/main.c    ****   // Initialize variables for y.
+ 316:Src/main.c    ****   char out_y_l, out_y_h; // 1 byte = 8 bits
+ 965              		.loc 1 316 3 is_stmt 1 view .LVU242
+ 317:Src/main.c    ****   SetI2CReadOrWrite(2, true);
+ 966              		.loc 1 317 3 view .LVU243
+ 967 0026 0121     		movs	r1, #1
+ 968 0028 0220     		movs	r0, #2
+ 969 002a FFF7FEFF 		bl	SetI2CReadOrWrite
+ 970              	.LVL37:
+ 318:Src/main.c    **** 
+ 319:Src/main.c    ****   IsReadingReceived();
+ 971              		.loc 1 319 3 view .LVU244
+ 972 002e FFF7FEFF 		bl	IsReadingReceived
+ 973              	.LVL38:
+ 320:Src/main.c    ****   out_y = I2C2->RXDR;
+ 974              		.loc 1 320 3 view .LVU245
+ 975              		.loc 1 320 15 is_stmt 0 view .LVU246
+ 976 0032 636A     		ldr	r3, [r4, #36]
+ 977              		.loc 1 320 9 view .LVU247
+ 978 0034 064D     		ldr	r5, .L59+4
+ 979 0036 2B80     		strh	r3, [r5]
+ 321:Src/main.c    **** 
+ 322:Src/main.c    ****   IsReadingReceived();
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 24
+
+
+ 980              		.loc 1 322 3 is_stmt 1 view .LVU248
+ 981 0038 FFF7FEFF 		bl	IsReadingReceived
+ 982              	.LVL39:
+ 323:Src/main.c    ****   out_y |= (I2C2->RXDR << 8);
+ 983              		.loc 1 323 3 view .LVU249
+ 984              		.loc 1 323 17 is_stmt 0 view .LVU250
+ 985 003c 636A     		ldr	r3, [r4, #36]
+ 986              		.loc 1 323 9 view .LVU251
+ 987 003e 1B02     		lsls	r3, r3, #8
+ 988 0040 2A88     		ldrh	r2, [r5]
+ 989 0042 1343     		orrs	r3, r2
+ 990 0044 2B80     		strh	r3, [r5]
+ 324:Src/main.c    ****   IsTransferComplete();
+ 991              		.loc 1 324 3 is_stmt 1 view .LVU252
+ 992 0046 FFF7FEFF 		bl	IsTransferComplete
+ 993              	.LVL40:
+ 325:Src/main.c    ****   // out_y = (out_y_h << 8) | out_y_l;
+ 326:Src/main.c    **** }
+ 994              		.loc 1 326 1 is_stmt 0 view .LVU253
+ 995              		@ sp needed
+ 996 004a 70BD     		pop	{r4, r5, r6, pc}
+ 997              	.L60:
+ 998              		.align	2
+ 999              	.L59:
+ 1000 004c 00580040 		.word	1073764352
+ 1001 0050 00000000 		.word	out_y
+ 1002              		.cfi_endproc
+ 1003              	.LFE54:
+ 1005              		.section	.text.GyroLED,"ax",%progbits
+ 1006              		.align	1
+ 1007              		.global	GyroLED
+ 1008              		.syntax unified
+ 1009              		.code	16
+ 1010              		.thumb_func
+ 1012              	GyroLED:
+ 1013              	.LVL41:
+ 1014              	.LFB55:
+ 327:Src/main.c    **** 
+ 328:Src/main.c    **** void GyroLED(int16_t x, int16_t y)
+ 329:Src/main.c    **** {
+ 1015              		.loc 1 329 1 is_stmt 1 view -0
+ 1016              		.cfi_startproc
+ 1017              		@ args = 0, pretend = 0, frame = 0
+ 1018              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1019              		.loc 1 329 1 is_stmt 0 view .LVU255
+ 1020 0000 70B5     		push	{r4, r5, r6, lr}
+ 1021              	.LCFI9:
+ 1022              		.cfi_def_cfa_offset 16
+ 1023              		.cfi_offset 4, -16
+ 1024              		.cfi_offset 5, -12
+ 1025              		.cfi_offset 6, -8
+ 1026              		.cfi_offset 14, -4
+ 1027 0002 0500     		movs	r5, r0
+ 1028 0004 0C00     		movs	r4, r1
+ 330:Src/main.c    ****   int16_t threshold = 500;
+ 1029              		.loc 1 330 3 is_stmt 1 view .LVU256
+ 1030              	.LVL42:
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 25
+
+
+ 331:Src/main.c    **** 
+ 332:Src/main.c    ****   if (abs(x) > threshold | abs(y) > threshold)
+ 1031              		.loc 1 332 3 view .LVU257
+ 1032              		.loc 1 332 7 is_stmt 0 view .LVU258
+ 1033 0006 C217     		asrs	r2, r0, #31
+ 1034 0008 8318     		adds	r3, r0, r2
+ 1035 000a 5340     		eors	r3, r2
+ 1036 000c 9BB2     		uxth	r3, r3
+ 1037              		.loc 1 332 28 view .LVU259
+ 1038 000e C917     		asrs	r1, r1, #31
+ 1039              	.LVL43:
+ 1040              		.loc 1 332 28 view .LVU260
+ 1041 0010 6218     		adds	r2, r4, r1
+ 1042 0012 4A40     		eors	r2, r1
+ 1043 0014 92B2     		uxth	r2, r2
+ 1044              		.loc 1 332 26 view .LVU261
+ 1045 0016 1900     		movs	r1, r3
+ 1046 0018 9342     		cmp	r3, r2
+ 1047 001a 00DA     		bge	.L62
+ 1048 001c 1100     		movs	r1, r2
+ 1049              	.L62:
+ 1050              		.loc 1 332 6 view .LVU262
+ 1051 001e FA20     		movs	r0, #250
+ 1052              	.LVL44:
+ 1053              		.loc 1 332 6 view .LVU263
+ 1054 0020 4000     		lsls	r0, r0, #1
+ 1055 0022 8142     		cmp	r1, r0
+ 1056 0024 16DD     		ble	.L61
+ 333:Src/main.c    ****   {
+ 334:Src/main.c    ****     if (abs(x) > abs(y)) {
+ 1057              		.loc 1 334 5 is_stmt 1 view .LVU264
+ 1058              		.loc 1 334 8 is_stmt 0 view .LVU265
+ 1059 0026 9342     		cmp	r3, r2
+ 1060 0028 15D9     		bls	.L64
+ 335:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, (x > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Po
+ 1061              		.loc 1 335 7 is_stmt 1 view .LVU266
+ 1062 002a 0122     		movs	r2, #1
+ 1063 002c 8542     		cmp	r5, r0
+ 1064 002e 00DC     		bgt	.L65
+ 1065 0030 0022     		movs	r2, #0
+ 1066              	.L65:
+ 1067 0032 D2B2     		uxtb	r2, r2
+ 1068 0034 8021     		movs	r1, #128
+ 1069 0036 4900     		lsls	r1, r1, #1
+ 1070 0038 1248     		ldr	r0, .L69
+ 1071 003a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1072              	.LVL45:
+ 336:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, (x < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Ne
+ 1073              		.loc 1 336 7 view .LVU267
+ 1074 003e 0122     		movs	r2, #1
+ 1075 0040 114B     		ldr	r3, .L69+4
+ 1076 0042 9D42     		cmp	r5, r3
+ 1077 0044 00DB     		blt	.L66
+ 1078 0046 0022     		movs	r2, #0
+ 1079              	.L66:
+ 1080 0048 D2B2     		uxtb	r2, r2
+ 1081 004a 8021     		movs	r1, #128
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 26
+
+
+ 1082 004c 8900     		lsls	r1, r1, #2
+ 1083 004e 0D48     		ldr	r0, .L69
+ 1084 0050 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1085              	.LVL46:
+ 1086              	.L61:
+ 337:Src/main.c    ****     }
+ 338:Src/main.c    ****     else {
+ 339:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, (y > threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET);  // Po
+ 340:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, (y < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Ne
+ 341:Src/main.c    ****     }
+ 342:Src/main.c    ****   }
+ 343:Src/main.c    **** }
+ 1087              		.loc 1 343 1 is_stmt 0 view .LVU268
+ 1088              		@ sp needed
+ 1089              	.LVL47:
+ 1090              	.LVL48:
+ 1091              		.loc 1 343 1 view .LVU269
+ 1092 0054 70BD     		pop	{r4, r5, r6, pc}
+ 1093              	.L64:
+ 339:Src/main.c    ****       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, (y < -threshold) ? GPIO_PIN_SET : GPIO_PIN_RESET); // Ne
+ 1094              		.loc 1 339 7 is_stmt 1 view .LVU270
+ 1095 0056 0122     		movs	r2, #1
+ 1096 0058 FA23     		movs	r3, #250
+ 1097 005a 5B00     		lsls	r3, r3, #1
+ 1098 005c 9C42     		cmp	r4, r3
+ 1099 005e 00DC     		bgt	.L67
+ 1100 0060 0022     		movs	r2, #0
+ 1101              	.L67:
+ 1102 0062 D2B2     		uxtb	r2, r2
+ 1103 0064 4021     		movs	r1, #64
+ 1104 0066 0748     		ldr	r0, .L69
+ 1105 0068 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1106              	.LVL49:
+ 340:Src/main.c    ****     }
+ 1107              		.loc 1 340 7 view .LVU271
+ 1108 006c 0122     		movs	r2, #1
+ 1109 006e 064B     		ldr	r3, .L69+4
+ 1110 0070 9C42     		cmp	r4, r3
+ 1111 0072 00DB     		blt	.L68
+ 1112 0074 0022     		movs	r2, #0
+ 1113              	.L68:
+ 1114 0076 D2B2     		uxtb	r2, r2
+ 1115 0078 8021     		movs	r1, #128
+ 1116 007a 0248     		ldr	r0, .L69
+ 1117 007c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1118              	.LVL50:
+ 1119              		.loc 1 343 1 is_stmt 0 view .LVU272
+ 1120 0080 E8E7     		b	.L61
+ 1121              	.L70:
+ 1122 0082 C046     		.align	2
+ 1123              	.L69:
+ 1124 0084 00080048 		.word	1207961600
+ 1125 0088 0CFEFFFF 		.word	-500
+ 1126              		.cfi_endproc
+ 1127              	.LFE55:
+ 1129              		.section	.text.Part2,"ax",%progbits
+ 1130              		.align	1
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 27
+
+
+ 1131              		.global	Part2
+ 1132              		.syntax unified
+ 1133              		.code	16
+ 1134              		.thumb_func
+ 1136              	Part2:
+ 1137              	.LFB56:
+ 344:Src/main.c    **** 
+ 345:Src/main.c    **** void Part2()
+ 346:Src/main.c    **** {
+ 1138              		.loc 1 346 1 is_stmt 1 view -0
+ 1139              		.cfi_startproc
+ 1140              		@ Volatile: function does not return.
+ 1141              		@ args = 0, pretend = 0, frame = 0
+ 1142              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1143 0000 10B5     		push	{r4, lr}
+ 1144              	.LCFI10:
+ 1145              		.cfi_def_cfa_offset 8
+ 1146              		.cfi_offset 4, -8
+ 1147              		.cfi_offset 14, -4
+ 347:Src/main.c    ****   /* Setup */
+ 348:Src/main.c    ****   SetEnable();
+ 1148              		.loc 1 348 3 view .LVU274
+ 1149 0002 FFF7FEFF 		bl	SetEnable
+ 1150              	.LVL51:
+ 349:Src/main.c    ****   SetGPIOModes();
+ 1151              		.loc 1 349 3 view .LVU275
+ 1152 0006 FFF7FEFF 		bl	SetGPIOModes
+ 1153              	.LVL52:
+ 350:Src/main.c    ****   SetI2CPeripheral();
+ 1154              		.loc 1 350 3 view .LVU276
+ 1155 000a FFF7FEFF 		bl	SetI2CPeripheral
+ 1156              	.LVL53:
+ 351:Src/main.c    ****   
+ 352:Src/main.c    ****   /* Initializing a Gyroscope */
+ 353:Src/main.c    ****   WriteGyroSensor();
+ 1157              		.loc 1 353 3 view .LVU277
+ 1158 000e FFF7FEFF 		bl	WriteGyroSensor
+ 1159              	.LVL54:
+ 1160              	.L72:
+ 354:Src/main.c    **** 
+ 355:Src/main.c    ****   while (1) {
+ 1161              		.loc 1 355 3 view .LVU278
+ 356:Src/main.c    ****     ReadAndSaveSensorX();
+ 1162              		.loc 1 356 5 view .LVU279
+ 1163 0012 FFF7FEFF 		bl	ReadAndSaveSensorX
+ 1164              	.LVL55:
+ 357:Src/main.c    ****     ReadAndSaveSensorY();
+ 1165              		.loc 1 357 5 view .LVU280
+ 1166 0016 FFF7FEFF 		bl	ReadAndSaveSensorY
+ 1167              	.LVL56:
+ 358:Src/main.c    ****     GyroLED(out_x, out_y);  
+ 1168              		.loc 1 358 5 view .LVU281
+ 1169 001a 064B     		ldr	r3, .L73
+ 1170 001c 0021     		movs	r1, #0
+ 1171 001e 595E     		ldrsh	r1, [r3, r1]
+ 1172 0020 054B     		ldr	r3, .L73+4
+ 1173 0022 0020     		movs	r0, #0
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 28
+
+
+ 1174 0024 185E     		ldrsh	r0, [r3, r0]
+ 1175 0026 FFF7FEFF 		bl	GyroLED
+ 1176              	.LVL57:
+ 359:Src/main.c    ****     HAL_Delay(100); // every 100ms
+ 1177              		.loc 1 359 5 discriminator 1 view .LVU282
+ 1178 002a 6420     		movs	r0, #100
+ 1179 002c FFF7FEFF 		bl	HAL_Delay
+ 1180              	.LVL58:
+ 355:Src/main.c    ****     ReadAndSaveSensorX();
+ 1181              		.loc 1 355 9 view .LVU283
+ 1182 0030 EFE7     		b	.L72
+ 1183              	.L74:
+ 1184 0032 C046     		.align	2
+ 1185              	.L73:
+ 1186 0034 00000000 		.word	out_y
+ 1187 0038 00000000 		.word	out_x
+ 1188              		.cfi_endproc
+ 1189              	.LFE56:
+ 1191              		.section	.text._Error_Handler,"ax",%progbits
+ 1192              		.align	1
+ 1193              		.global	_Error_Handler
+ 1194              		.syntax unified
+ 1195              		.code	16
+ 1196              		.thumb_func
+ 1198              	_Error_Handler:
+ 1199              	.LFB59:
+ 360:Src/main.c    ****   }
+ 361:Src/main.c    **** }
+ 362:Src/main.c    **** 
+ 363:Src/main.c    **** /* USER CODE END PFP */
+ 364:Src/main.c    **** 
+ 365:Src/main.c    **** /* USER CODE BEGIN 0 */
+ 366:Src/main.c    **** 
+ 367:Src/main.c    **** /* USER CODE END 0 */
+ 368:Src/main.c    **** 
+ 369:Src/main.c    **** int main(void) 
+ 370:Src/main.c    **** {
+ 371:Src/main.c    ****   HAL_Init(); // Reset of all peripherals, init the Flash and Systick
+ 372:Src/main.c    ****   SystemClock_Config(); //Configure the system clock
+ 373:Src/main.c    **** 
+ 374:Src/main.c    ****   // Part1();
+ 375:Src/main.c    ****   Part2();
+ 376:Src/main.c    **** }
+ 377:Src/main.c    **** 
+ 378:Src/main.c    **** /** System Clock Configuration
+ 379:Src/main.c    **** */
+ 380:Src/main.c    **** void SystemClock_Config(void)
+ 381:Src/main.c    **** {
+ 382:Src/main.c    **** 
+ 383:Src/main.c    ****   RCC_OscInitTypeDef RCC_OscInitStruct;
+ 384:Src/main.c    ****   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+ 385:Src/main.c    **** 
+ 386:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks
+ 387:Src/main.c    ****     */
+ 388:Src/main.c    ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+ 389:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 390:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 29
+
+
+ 391:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 392:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 393:Src/main.c    ****   {
+ 394:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 395:Src/main.c    ****   }
+ 396:Src/main.c    **** 
+ 397:Src/main.c    ****     /**Initializes the CPU, AHB and APB busses clocks
+ 398:Src/main.c    ****     */
+ 399:Src/main.c    ****   RCC_ClkInitStruct.ClockType =  RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |RCC_CLOCKTYPE_PCLK1;
+ 400:Src/main.c    ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+ 401:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 402:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 403:Src/main.c    **** 
+ 404:Src/main.c    ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+ 405:Src/main.c    ****   {
+ 406:Src/main.c    ****     _Error_Handler(__FILE__, __LINE__);
+ 407:Src/main.c    ****   }
+ 408:Src/main.c    **** 
+ 409:Src/main.c    ****     /**Configure the Systick interrupt time
+ 410:Src/main.c    ****     */
+ 411:Src/main.c    ****   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+ 412:Src/main.c    **** 
+ 413:Src/main.c    ****     /**Configure the Systick
+ 414:Src/main.c    ****     */
+ 415:Src/main.c    ****   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+ 416:Src/main.c    **** 
+ 417:Src/main.c    ****   /* SysTick_IRQn interrupt configuration */
+ 418:Src/main.c    ****   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+ 419:Src/main.c    **** }
+ 420:Src/main.c    **** 
+ 421:Src/main.c    **** /* USER CODE BEGIN 4 */
+ 422:Src/main.c    **** 
+ 423:Src/main.c    **** /* USER CODE END 4 */
+ 424:Src/main.c    **** 
+ 425:Src/main.c    **** /**
+ 426:Src/main.c    ****   * @brief  This function is executed in case of error occurrence.
+ 427:Src/main.c    ****   * @param  None
+ 428:Src/main.c    ****   * @retval None
+ 429:Src/main.c    ****   */
+ 430:Src/main.c    **** void _Error_Handler(char * file, int line)
+ 431:Src/main.c    **** {
+ 1200              		.loc 1 431 1 view -0
+ 1201              		.cfi_startproc
+ 1202              		@ Volatile: function does not return.
+ 1203              		@ args = 0, pretend = 0, frame = 0
+ 1204              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1205              		@ link register save eliminated.
+ 1206              	.LVL59:
+ 1207              	.L76:
+ 432:Src/main.c    ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 433:Src/main.c    ****   /* User can add his own implementation to report the HAL error return state */
+ 434:Src/main.c    ****   while(1)
+ 1208              		.loc 1 434 3 view .LVU285
+ 435:Src/main.c    ****   {
+ 436:Src/main.c    ****   }
+ 1209              		.loc 1 436 3 view .LVU286
+ 434:Src/main.c    ****   {
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 30
+
+
+ 1210              		.loc 1 434 8 view .LVU287
+ 1211 0000 FEE7     		b	.L76
+ 1212              		.cfi_endproc
+ 1213              	.LFE59:
+ 1215              		.section	.rodata.SystemClock_Config.str1.4,"aMS",%progbits,1
+ 1216              		.align	2
+ 1217              	.LC4:
+ 1218 0000 5372632F 		.ascii	"Src/main.c\000"
+ 1218      6D61696E 
+ 1218      2E6300
+ 1219              		.global	__aeabi_uidiv
+ 1220              		.section	.text.SystemClock_Config,"ax",%progbits
+ 1221              		.align	1
+ 1222              		.global	SystemClock_Config
+ 1223              		.syntax unified
+ 1224              		.code	16
+ 1225              		.thumb_func
+ 1227              	SystemClock_Config:
+ 1228              	.LFB58:
+ 381:Src/main.c    **** 
+ 1229              		.loc 1 381 1 view -0
+ 1230              		.cfi_startproc
+ 1231              		@ args = 0, pretend = 0, frame = 72
+ 1232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1233 0000 00B5     		push	{lr}
+ 1234              	.LCFI11:
+ 1235              		.cfi_def_cfa_offset 4
+ 1236              		.cfi_offset 14, -4
+ 1237 0002 93B0     		sub	sp, sp, #76
+ 1238              	.LCFI12:
+ 1239              		.cfi_def_cfa_offset 80
+ 383:Src/main.c    ****   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+ 1240              		.loc 1 383 3 view .LVU289
+ 384:Src/main.c    **** 
+ 1241              		.loc 1 384 3 view .LVU290
+ 388:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 1242              		.loc 1 388 3 view .LVU291
+ 388:Src/main.c    ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 1243              		.loc 1 388 36 is_stmt 0 view .LVU292
+ 1244 0004 0223     		movs	r3, #2
+ 1245 0006 0593     		str	r3, [sp, #20]
+ 389:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ 1246              		.loc 1 389 3 is_stmt 1 view .LVU293
+ 389:Src/main.c    ****   RCC_OscInitStruct.HSICalibrationValue = 16;
+ 1247              		.loc 1 389 30 is_stmt 0 view .LVU294
+ 1248 0008 013B     		subs	r3, r3, #1
+ 1249 000a 0893     		str	r3, [sp, #32]
+ 390:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 1250              		.loc 1 390 3 is_stmt 1 view .LVU295
+ 390:Src/main.c    ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+ 1251              		.loc 1 390 41 is_stmt 0 view .LVU296
+ 1252 000c 0F33     		adds	r3, r3, #15
+ 1253 000e 0993     		str	r3, [sp, #36]
+ 391:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 1254              		.loc 1 391 3 is_stmt 1 view .LVU297
+ 391:Src/main.c    ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 1255              		.loc 1 391 34 is_stmt 0 view .LVU298
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 31
+
+
+ 1256 0010 0023     		movs	r3, #0
+ 1257 0012 0E93     		str	r3, [sp, #56]
+ 392:Src/main.c    ****   {
+ 1258              		.loc 1 392 3 is_stmt 1 view .LVU299
+ 392:Src/main.c    ****   {
+ 1259              		.loc 1 392 7 is_stmt 0 view .LVU300
+ 1260 0014 05A8     		add	r0, sp, #20
+ 1261 0016 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 1262              	.LVL60:
+ 392:Src/main.c    ****   {
+ 1263              		.loc 1 392 6 discriminator 1 view .LVU301
+ 1264 001a 0028     		cmp	r0, #0
+ 1265 001c 1ED1     		bne	.L80
+ 399:Src/main.c    ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+ 1266              		.loc 1 399 3 is_stmt 1 view .LVU302
+ 399:Src/main.c    ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+ 1267              		.loc 1 399 31 is_stmt 0 view .LVU303
+ 1268 001e 0723     		movs	r3, #7
+ 1269 0020 0193     		str	r3, [sp, #4]
+ 400:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 1270              		.loc 1 400 3 is_stmt 1 view .LVU304
+ 400:Src/main.c    ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 1271              		.loc 1 400 34 is_stmt 0 view .LVU305
+ 1272 0022 0023     		movs	r3, #0
+ 1273 0024 0293     		str	r3, [sp, #8]
+ 401:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 1274              		.loc 1 401 3 is_stmt 1 view .LVU306
+ 401:Src/main.c    ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+ 1275              		.loc 1 401 35 is_stmt 0 view .LVU307
+ 1276 0026 0393     		str	r3, [sp, #12]
+ 402:Src/main.c    **** 
+ 1277              		.loc 1 402 3 is_stmt 1 view .LVU308
+ 402:Src/main.c    **** 
+ 1278              		.loc 1 402 36 is_stmt 0 view .LVU309
+ 1279 0028 0493     		str	r3, [sp, #16]
+ 404:Src/main.c    ****   {
+ 1280              		.loc 1 404 3 is_stmt 1 view .LVU310
+ 404:Src/main.c    ****   {
+ 1281              		.loc 1 404 7 is_stmt 0 view .LVU311
+ 1282 002a 0021     		movs	r1, #0
+ 1283 002c 01A8     		add	r0, sp, #4
+ 1284 002e FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 1285              	.LVL61:
+ 404:Src/main.c    ****   {
+ 1286              		.loc 1 404 6 discriminator 1 view .LVU312
+ 1287 0032 0028     		cmp	r0, #0
+ 1288 0034 17D1     		bne	.L81
+ 411:Src/main.c    **** 
+ 1289              		.loc 1 411 3 is_stmt 1 view .LVU313
+ 411:Src/main.c    **** 
+ 1290              		.loc 1 411 22 is_stmt 0 view .LVU314
+ 1291 0036 FFF7FEFF 		bl	HAL_RCC_GetHCLKFreq
+ 1292              	.LVL62:
+ 411:Src/main.c    **** 
+ 1293              		.loc 1 411 3 discriminator 1 view .LVU315
+ 1294 003a FA21     		movs	r1, #250
+ 1295 003c 8900     		lsls	r1, r1, #2
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 32
+
+
+ 1296 003e FFF7FEFF 		bl	__aeabi_uidiv
+ 1297              	.LVL63:
+ 1298 0042 FFF7FEFF 		bl	HAL_SYSTICK_Config
+ 1299              	.LVL64:
+ 415:Src/main.c    **** 
+ 1300              		.loc 1 415 3 is_stmt 1 view .LVU316
+ 1301 0046 0420     		movs	r0, #4
+ 1302 0048 FFF7FEFF 		bl	HAL_SYSTICK_CLKSourceConfig
+ 1303              	.LVL65:
+ 418:Src/main.c    **** }
+ 1304              		.loc 1 418 3 view .LVU317
+ 1305 004c 0120     		movs	r0, #1
+ 1306 004e 0022     		movs	r2, #0
+ 1307 0050 0021     		movs	r1, #0
+ 1308 0052 4042     		rsbs	r0, r0, #0
+ 1309 0054 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 1310              	.LVL66:
+ 419:Src/main.c    **** 
+ 1311              		.loc 1 419 1 is_stmt 0 view .LVU318
+ 1312 0058 13B0     		add	sp, sp, #76
+ 1313              		@ sp needed
+ 1314 005a 00BD     		pop	{pc}
+ 1315              	.L80:
+ 394:Src/main.c    ****   }
+ 1316              		.loc 1 394 5 is_stmt 1 view .LVU319
+ 1317 005c C521     		movs	r1, #197
+ 1318 005e 0448     		ldr	r0, .L82
+ 1319 0060 4900     		lsls	r1, r1, #1
+ 1320 0062 FFF7FEFF 		bl	_Error_Handler
+ 1321              	.LVL67:
+ 1322              	.L81:
+ 406:Src/main.c    ****   }
+ 1323              		.loc 1 406 5 view .LVU320
+ 1324 0066 CB21     		movs	r1, #203
+ 1325 0068 0148     		ldr	r0, .L82
+ 1326 006a 4900     		lsls	r1, r1, #1
+ 1327 006c FFF7FEFF 		bl	_Error_Handler
+ 1328              	.LVL68:
+ 1329              	.L83:
+ 1330              		.align	2
+ 1331              	.L82:
+ 1332 0070 00000000 		.word	.LC4
+ 1333              		.cfi_endproc
+ 1334              	.LFE58:
+ 1336              		.section	.text.main,"ax",%progbits
+ 1337              		.align	1
+ 1338              		.global	main
+ 1339              		.syntax unified
+ 1340              		.code	16
+ 1341              		.thumb_func
+ 1343              	main:
+ 1344              	.LFB57:
+ 370:Src/main.c    ****   HAL_Init(); // Reset of all peripherals, init the Flash and Systick
+ 1345              		.loc 1 370 1 view -0
+ 1346              		.cfi_startproc
+ 1347              		@ Volatile: function does not return.
+ 1348              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 33
+
+
+ 1349              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1350 0000 10B5     		push	{r4, lr}
+ 1351              	.LCFI13:
+ 1352              		.cfi_def_cfa_offset 8
+ 1353              		.cfi_offset 4, -8
+ 1354              		.cfi_offset 14, -4
+ 371:Src/main.c    ****   SystemClock_Config(); //Configure the system clock
+ 1355              		.loc 1 371 3 view .LVU322
+ 1356 0002 FFF7FEFF 		bl	HAL_Init
+ 1357              	.LVL69:
+ 372:Src/main.c    **** 
+ 1358              		.loc 1 372 3 view .LVU323
+ 1359 0006 FFF7FEFF 		bl	SystemClock_Config
+ 1360              	.LVL70:
+ 375:Src/main.c    **** }
+ 1361              		.loc 1 375 3 view .LVU324
+ 1362 000a FFF7FEFF 		bl	Part2
+ 1363              	.LVL71:
+ 1364              		.cfi_endproc
+ 1365              	.LFE57:
+ 1367              		.global	out_y
+ 1368              		.section	.bss.out_y,"aw",%nobits
+ 1369              		.align	1
+ 1372              	out_y:
+ 1373 0000 0000     		.space	2
+ 1374              		.global	out_x
+ 1375              		.section	.bss.out_x,"aw",%nobits
+ 1376              		.align	1
+ 1379              	out_x:
+ 1380 0000 0000     		.space	2
+ 1381              		.text
+ 1382              	.Letext0:
+ 1383              		.file 2 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f072xb.h"
+ 1384              		.file 3 "/Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1385              		.file 4 "/Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1386              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 1387              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h"
+ 1388              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h"
+ 1389              		.file 8 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_cortex.h"
+ 1390              		.file 9 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ 1391              		.file 10 "<built-in>"
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 34
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:19     .text.SetEnable:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:25     .text.SetEnable:00000000 SetEnable
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:63     .text.SetEnable:00000024 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:68     .text.SetGPIOModes:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:74     .text.SetGPIOModes:00000000 SetGPIOModes
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:239    .text.SetGPIOModes:000000bc $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:249    .text.SetI2CPeripheral:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:255    .text.SetI2CPeripheral:00000000 SetI2CPeripheral
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:315    .text.SetI2CPeripheral:0000003c $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:320    .text.SetupI2CParameters:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:326    .text.SetupI2CParameters:00000000 SetupI2CParameters
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:400    .text.SetupI2CParameters:00000048 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:408    .text.IsReadingReceived:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:414    .text.IsReadingReceived:00000000 IsReadingReceived
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:455    .text.IsReadingReceived:00000020 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:461    .text.SetI2CReadOrWrite:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:467    .text.SetI2CReadOrWrite:00000000 SetI2CReadOrWrite
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:595    .text.SetI2CReadOrWrite:00000078 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:604    .text.IsTransferComplete:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:610    .text.IsTransferComplete:00000000 IsTransferComplete
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:631    .text.IsTransferComplete:0000000c $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:636    .text.IsTransmitReady:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:642    .text.IsTransmitReady:00000000 IsTransmitReady
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:683    .text.IsTransmitReady:00000020 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:689    .text.Part1:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:695    .text.Part1:00000000 Part1
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:775    .text.Part1:00000058 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:781    .text.WriteGyroSensor:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:787    .text.WriteGyroSensor:00000000 WriteGyroSensor
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:827    .text.WriteGyroSensor:00000024 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:832    .text.ReadAndSaveSensorX:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:838    .text.ReadAndSaveSensorX:00000000 ReadAndSaveSensorX
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:913    .text.ReadAndSaveSensorX:0000004c $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1379   .bss.out_x:00000000 out_x
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:919    .text.ReadAndSaveSensorY:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:925    .text.ReadAndSaveSensorY:00000000 ReadAndSaveSensorY
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1000   .text.ReadAndSaveSensorY:0000004c $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1372   .bss.out_y:00000000 out_y
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1006   .text.GyroLED:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1012   .text.GyroLED:00000000 GyroLED
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1124   .text.GyroLED:00000084 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1130   .text.Part2:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1136   .text.Part2:00000000 Part2
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1186   .text.Part2:00000034 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1192   .text._Error_Handler:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1198   .text._Error_Handler:00000000 _Error_Handler
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1216   .rodata.SystemClock_Config.str1.4:00000000 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1221   .text.SystemClock_Config:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1227   .text.SystemClock_Config:00000000 SystemClock_Config
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1332   .text.SystemClock_Config:00000070 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1337   .text.main:00000000 $t
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1343   .text.main:00000000 main
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1369   .bss.out_y:00000000 $d
+/var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s:1376   .bss.out_x:00000000 $d
+
+ARM GAS  /var/folders/p5/kmhjbybn0dlg720ptw11fhww0000gn/T//cc5wcB0Z.s 			page 35
+
+
+UNDEFINED SYMBOLS
+memset
+HAL_GPIO_Init
+HAL_GPIO_WritePin
+HAL_Delay
+__aeabi_uidiv
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_RCC_GetHCLKFreq
+HAL_SYSTICK_Config
+HAL_SYSTICK_CLKSourceConfig
+HAL_NVIC_SetPriority
+HAL_Init

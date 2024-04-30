@@ -44,6 +44,9 @@
 #include "main.h"
 #include "stm32f0xx_hal.h"
 #include "stm32f072xb.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 void _Error_Handler(char * file, int line);
 
 /* USER CODE BEGIN Includes */
@@ -55,7 +58,6 @@ void _Error_Handler(char * file, int line);
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,14 +65,86 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-void TIM2_IRQHandler()
-{
-  TIM2->SR &= ~(TIM_SR_UIF); // Clear the appropriate flag
-  GPIOC->ODR ^= ((1 << 8) | (1 << 9));
-}
+
+/* Setup Functions */
 
 /* USER CODE END PFP */
+void SetEnable()
+{
+  RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+  RCC->APB2ENR |= RCC_APB2ENR_ADCEN;
+  RCC->APB1ENR |= RCC_APB1ENR_DACEN;
+}
 
+void InitializeLEDPins()
+{
+  GPIO_InitTypeDef initStr = {GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9,
+                              GPIO_MODE_OUTPUT_PP,
+                              GPIO_SPEED_FREQ_LOW,
+                              GPIO_NOPULL};
+  HAL_GPIO_Init(GPIOC, &initStr);
+}
+
+void Calibration()
+{
+  /* (1) Ensure that ADEN = 0 */
+  /* (2) Clear ADEN by setting ADDIS*/
+  /* (3) Clear DMAEN */
+  /* (4) Launch the calibration by setting ADCAL */
+  /* (5) Wait until ADCAL=0 */
+  if ((ADC1->CR & ADC_CR_ADEN) != 0) /* (1) */ {
+    ADC1->CR |= ADC_CR_ADDIS; /* (2) */
+  }
+  while ((ADC1->CR & ADC_CR_ADEN) != 0);
+  ADC1->CFGR1 &= ~ADC_CFGR1_DMAEN; /* (3) */
+  ADC1->CR |= ADC_CR_ADCAL; /* (4) */
+  while ((ADC1->CR & ADC_CR_ADCAL) != 0); /* (5) */
+}
+
+void EnableADC()
+{
+  /* Enable the ADC */
+  /* (1) Ensure that ADRDY = 0 */
+  /* (2) Clear ADRDY */
+  /* (3) Enable the ADC */
+  /* (4) Wait until ADC ready */
+  if (ADC1->ISR & ADC_ISR_ADRDY) /* (1) */ {
+    ADC1->ISR |= ADC_ISR_ADRDY; /* (2) */
+  }
+  ADC1->CR |= ADC_CR_ADEN; /* (3) */
+  while (!(ADC1->ISR & ADC_ISR_ADRDY)); /* (4) */    
+}
+
+void SetLEDSByADC()
+{
+  int threshold1 = 0;
+  int threshold2 = 63;
+  int threshold3 = 127;
+  int threshold4 = 256;
+
+  // Reset all LEDs
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9, GPIO_PIN_RESET);
+
+  if (ADC1->DR > threshold1 && ADC1->DR <= threshold2) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+  }
+  else if (ADC1->DR > threshold2 && ADC1->DR <= threshold3) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+  }
+  else if (ADC1->DR > threshold3 && ADC1->DR <= threshold4) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+  }
+  else if (ADC1->DR > threshold4) {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+  }
+  else {
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+  }
+}
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -80,53 +154,71 @@ int main(void)
   HAL_Init(); // Reset of all peripherals, init the Flash and Systick
   SystemClock_Config(); //Configure the system clock
 
-  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+  /****************************************** 
+  6.1 Measuring a Potentiometer With the ADC 
+  *******************************************/
+  // 1. Initialize the LED pins to output.
+  SetEnable();
+  InitializeLEDPins();
 
-  // 3.1 Using Timer Interrupts
-  RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-  TIM2->PSC = 7999;
-  TIM2->ARR = 250;
-  TIM2->DIER |= 0x1;
-  TIM2->CR1 |= TIM_CR1_CEN;
+  // 2. Select a GPIO pin to use as the ADC input. (PC0)
+  // Configure to Analog mode
+  GPIOC->MODER |= (GPIO_MODER_MODER0_1 | GPIO_MODER_MODER0_0);
+  // No pull-up, pull-down
+  GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPDR0_1 | GPIO_PUPDR_PUPDR0_0);
 
-  NVIC_EnableIRQ(TIM2_IRQn);
+  // 4. Configure the ADC.
+  // 8-bit resolution
+  ADC1->CFGR1 |= ADC_CFGR1_RES_1;
+  ADC1->CFGR1 &= ~ADC_CFGR1_RES_0;
+  // Continuous conversion mode
+  ADC1->CFGR1 |= ADC_CFGR1_CONT;
+  // Hardware triggers disabled
+  ADC1->CFGR1 &= ~ADC_CFGR1_EXTEN;
 
-  // 3.2 Configuring Timer Channels to PWM Mode
-  RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
-  TIM3->PSC = 79;
-  TIM3->ARR = 125;
+  // 5. Select/enable the input pin’s channel for ADC conversion.
+  ADC1->CHSELR |= ADC_CHSELR_CHSEL10;
 
-  // Set Channels to Output
-  TIM3->CCMR1 &= ~(TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC1S_1); // channel 1
-  TIM3->CCMR1 &= ~(TIM_CCMR1_CC2S_0 | TIM_CCMR1_CC2S_1); // channel 2
+  // 6. Perform a self-calibration, enable, and start the ADC.
+    Calibration();
+    EnableADC();
+    // Start ADC.
+    ADC1->CR |= ADC_CR_ADSTART;
 
-  // output channel 1 to PWM Mode 2 (111), output channel 2 to PWM Mode 1 (110)
-  TIM3->CCMR1 |= (TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2);
-  TIM3->CCMR1 |= (TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2);
-  TIM3->CCMR1 &= ~TIM_CCMR1_OC2M_0;
+  /************************************
+  6.2 Generating Waveforms with the DAC
+  *************************************/
+  // 1. Select a GPIO pin to use as the DAC output (PA4)
+  // Configure to Analog mode
+  GPIOA->MODER |= (GPIO_MODER_MODER4_1 | GPIO_MODER_MODER4_0);
+  // No pull-up, pull-down
+  GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR4_1 | GPIO_PUPDR_PUPDR4_0);
   
-  TIM3->CCMR1 |= TIM_CCMR1_OC1PE; // Enable OC1PE
-  TIM3->CCMR1 |= TIM_CCMR1_OC2PE; // Enable OC2PE
-  TIM3->CR1 |= TIM_CR1_CEN;
+  // 2. Set the used DAC channel to software trigger mode
+  DAC1->CR |= (DAC_CR_TSEL1_2 | DAC_CR_TSEL1_1 | DAC_CR_TSEL1_0);
 
-  TIM3->CCER |= (TIM_CCER_CC1E | TIM_CCER_CC2E);
+  // 3. Enable the used DAC channel
+  DAC1->CR |= DAC_CR_TEN1;
+  DAC1->CR |= DAC_CR_EN1;
 
-  TIM3->CCR1 = 25; // 125 * 0.2 = 25, 125 * 0.9 = 112.5
-  TIM3->CCR2 = 25; // 125 * 0.2 = 25, 125 * 0.9 = 112.5
+  // 4. Copy one of the wave-tables in figure 6.8 into your application.
+  // Sine Wave: 8-bit, 32 samples/cycle
+  const uint8_t sine_table[32] = {127,151,175,197,216,232,244,251,254,251,244,
+  232,216,197,175,151,127,102,78,56,37,21,9,2,0,2,9,21,37,56,78,102};
 
-  // 3.3 Configuring Pin Alternate Functions
-
-  // Set up a configuration struct to pass to the initialization function\
-  // alternate function mode for PC6 and PC7
-  GPIOC->MODER |= (GPIO_MODER_MODER9_0 | GPIO_MODER_MODER8_0 | GPIO_MODER_MODER7_1 | GPIO_MODER_MODER6_1);
-  GPIOC->MODER &= ~(GPIO_MODER_MODER9_1 | GPIO_MODER_MODER8_1 | GPIO_MODER_MODER7_0 | GPIO_MODER_MODER6_0);
-  GPIOC->OTYPER &= ~(GPIO_OTYPER_OT_8 | GPIO_OTYPER_OT_9 | GPIO_OTYPER_OT_6 | GPIO_OTYPER_OT_7);
-  GPIOC->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR8 | GPIO_OSPEEDR_OSPEEDR9 | GPIO_OSPEEDR_OSPEEDR6 | GPIO_OSPEEDR_OSPEEDR7);
-  GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPDR8 | GPIO_PUPDR_PUPDR9 | GPIO_PUPDR_PUPDR6 | GPIO_PUPDR_PUPDR7);
-  GPIOC->AFR[0] |= GPIO_AFRL_AFRL0;
-  GPIOC->AFR[1] |= GPIO_AFRH_AFRH0;
-
-  GPIOC->ODR |= (GPIO_ODR_9);
+  // 5. In the main application loop, use an index variable to write the next value in the wave-table (array) 
+  // to the appropriate DAC data register.
+  while (1) {
+    /* Part 1*/
+    SetLEDSByADC();
+    // /* Part 2 */
+    // for (int i = 0; i < 32; i++) {
+    //   DAC1->DHR8R1 = sine_table[i];
+    //   DAC1->SWTRIGR = DAC_SWTRIGR_SWTRIG1;
+    //   // 6. Use a 1ms delay between updating the DAC to new values.
+    //   HAL_Delay(1);
+    // }
+  }
 }
 
 /** System Clock Configuration

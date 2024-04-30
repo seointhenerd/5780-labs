@@ -44,6 +44,7 @@
 #include "main.h"
 #include "stm32f0xx_hal.h"
 #include "stm32f072xb.h"
+
 void _Error_Handler(char * file, int line);
 
 /* USER CODE BEGIN Includes */
@@ -51,6 +52,8 @@ void _Error_Handler(char * file, int line);
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+char LEDcolor, LEDmode;
+int isLEDSet;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -62,13 +65,93 @@ void _Error_Handler(char * file, int line);
 void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
-void TIM2_IRQHandler()
+void TransmitChar(char c)
 {
-  TIM2->SR &= ~(TIM_SR_UIF); // Clear the appropriate flag
-  GPIOC->ODR ^= ((1 << 8) | (1 << 9));
+  while (!(USART3->ISR & USART_ISR_TXE)); // exits once the flag is set.
+
+  // Write the character into the transmit data register.
+  USART3->TDR = c;
 }
 
+void TransmitString(char* str)
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    TransmitChar(str[i]);
+  }
+}
+
+void ReceiveLED()
+{
+  // Check and wait on the USART status flag that indicates the transmit register is empty.
+  if (USART3->ISR & USART_CR1_RXNEIE)
+  {
+    LEDcolor = USART3->RDR;
+
+    switch(LEDcolor) {
+    case 'r': // Red LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_6);
+        break;
+    case 'b': // Blue LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_7);
+        break;
+    case 'o': // Orange LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_8);
+        break;
+    case 'g': // Green LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_9);
+        break;
+    }
+
+    if (LEDcolor != 'r' && LEDcolor != 'b' && LEDcolor != 'o' && LEDcolor != 'g')
+    {
+      TransmitString("Unknown Input\n");
+    }
+  }
+}
+
+void USART3_4_IRQHandler()
+{
+  if (!isLEDSet)
+  {
+    LEDcolor = USART3->RDR;
+    isLEDSet = 1;
+  }
+  else
+  {
+    LEDmode = USART3->RDR;
+    switch(LEDcolor) {
+      case 'r': // Red LED
+        if (LEDmode == '0') GPIOC->ODR &= ~GPIO_ODR_6;
+        else if (LEDmode == '1') GPIOC->ODR |= GPIO_ODR_6;
+        else if (LEDmode == '2') HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_6);
+        break;
+      case 'b': // Blue LED
+        if (LEDmode == '0') GPIOC->ODR &= ~GPIO_ODR_7;
+        else if (LEDmode == '1') GPIOC->ODR |= GPIO_ODR_7;
+        else if (LEDmode == '2') HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_7);
+        break;
+      case 'o': // Orange LED
+        if (LEDmode == '0') GPIOC->ODR &= ~GPIO_ODR_8;
+        else if (LEDmode == '1') GPIOC->ODR |= GPIO_ODR_8;
+        else if (LEDmode == '2') HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_8);
+        break;
+      case 'g': // Green LED
+        if (LEDmode == '0') GPIOC->ODR &= ~GPIO_ODR_9;
+        else if (LEDmode == '1') GPIOC->ODR |= GPIO_ODR_9;
+        else if (LEDmode == '2') HAL_GPIO_TogglePin(GPIOC, GPIO_ODR_9);
+        break;
+    }
+    isLEDSet = 0;
+  }
+
+  if (LEDcolor != 'r' && LEDcolor != 'b' && LEDcolor != 'o' && LEDcolor != 'g')
+  {
+    TransmitString("Unknown Input\n");
+  }
+}
+
+/* Private function prototypes -----------------------------------------------*/
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -77,56 +160,49 @@ void TIM2_IRQHandler()
 
 int main(void) 
 {
-  HAL_Init(); // Reset of all peripherals, init the Flash and Systick
-  SystemClock_Config(); //Configure the system clock
+  SystemClock_Config(); // Configure the system clock
 
-  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+  unsigned int baud_rate = 115200;
 
-  // 3.1 Using Timer Interrupts
-  RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-  TIM2->PSC = 7999;
-  TIM2->ARR = 250;
-  TIM2->DIER |= 0x1;
-  TIM2->CR1 |= TIM_CR1_CEN;
+  // Enable the system clock to the desired USART in the RCC peripheral.
+  RCC->APB1ENR |= RCC_APB1ENR_USART3EN;  // Enable USART3 clock
+  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;   // Enable GPIOB clock
+  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;   // Enable GPIOC clock
 
-  NVIC_EnableIRQ(TIM2_IRQn);
+  // 4.1 Preparing to use the USART
+  // PB10 - USART3_TX, PB11 - USART3_RX
+  // Set MODER to Alternate Function mode
+  GPIOB->MODER |= (GPIO_MODER_MODER10_1 | GPIO_MODER_MODER11_1);
+  GPIOB->MODER &= ~(GPIO_MODER_MODER10_0 | GPIO_MODER_MODER11_0);
+  GPIOB->OTYPER &= ~(GPIO_OTYPER_OT_10 | GPIO_OTYPER_OT_11);
+  GPIOB->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR10 | GPIO_OSPEEDR_OSPEEDR11);
+  GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPDR10 | GPIO_PUPDR_PUPDR11);
 
-  // 3.2 Configuring Timer Channels to PWM Mode
-  RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
-  TIM3->PSC = 79;
-  TIM3->ARR = 125;
+  // Configure LED pins
+  GPIOC->MODER |= (GPIO_MODER_MODER9_0 | GPIO_MODER_MODER8_0 | GPIO_MODER_MODER7_0 | GPIO_MODER_MODER6_0);
+  GPIOC->MODER &= ~(GPIO_MODER_MODER9_1 | GPIO_MODER_MODER8_1 | GPIO_MODER_MODER7_1 | GPIO_MODER_MODER6_1);
+  GPIOC->OTYPER &= ~(GPIO_OTYPER_OT_9 | GPIO_OTYPER_OT_8 | GPIO_OTYPER_OT_7 | GPIO_OTYPER_OT_6);
+  GPIOC->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR9 | GPIO_OSPEEDR_OSPEEDR8 | GPIO_OSPEEDR_OSPEEDR7 | GPIO_OSPEEDR_OSPEEDR6);
+  GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPDR9 | GPIO_PUPDR_PUPDR8 | GPIO_PUPDR_PUPDR6 | GPIO_PUPDR_PUPDR7);
 
-  // Set Channels to Output
-  TIM3->CCMR1 &= ~(TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC1S_1); // channel 1
-  TIM3->CCMR1 &= ~(TIM_CCMR1_CC2S_0 | TIM_CCMR1_CC2S_1); // channel 2
+  GPIOB->AFR[1] |= ((4 << 8) | (4 << 12));
 
-  // output channel 1 to PWM Mode 2 (111), output channel 2 to PWM Mode 1 (110)
-  TIM3->CCMR1 |= (TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2);
-  TIM3->CCMR1 |= (TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2);
-  TIM3->CCMR1 &= ~TIM_CCMR1_OC2M_0;
-  
-  TIM3->CCMR1 |= TIM_CCMR1_OC1PE; // Enable OC1PE
-  TIM3->CCMR1 |= TIM_CCMR1_OC2PE; // Enable OC2PE
-  TIM3->CR1 |= TIM_CR1_CEN;
+  // Set the Baud rate for communication to be 115200 bits/second.
+  USART3->BRR = (uint16_t)(HAL_RCC_GetHCLKFreq() / baud_rate); // 69
+  USART3->CR1 |= (USART_CR1_TE | USART_CR1_RE);    // Enable Receiver
+  USART3->CR1 |= USART_CR1_UE;                     // Enable USART
+  USART3->CR1 |= USART_CR1_RXNEIE;
 
-  TIM3->CCER |= (TIM_CCER_CC1E | TIM_CCER_CC2E);
 
-  TIM3->CCR1 = 25; // 125 * 0.2 = 25, 125 * 0.9 = 112.5
-  TIM3->CCR2 = 25; // 125 * 0.2 = 25, 125 * 0.9 = 112.5
+  // 4.3 Interrupt-Based Reception
+  NVIC_EnableIRQ(USART3_4_IRQn);
 
-  // 3.3 Configuring Pin Alternate Functions
-
-  // Set up a configuration struct to pass to the initialization function\
-  // alternate function mode for PC6 and PC7
-  GPIOC->MODER |= (GPIO_MODER_MODER9_0 | GPIO_MODER_MODER8_0 | GPIO_MODER_MODER7_1 | GPIO_MODER_MODER6_1);
-  GPIOC->MODER &= ~(GPIO_MODER_MODER9_1 | GPIO_MODER_MODER8_1 | GPIO_MODER_MODER7_0 | GPIO_MODER_MODER6_0);
-  GPIOC->OTYPER &= ~(GPIO_OTYPER_OT_8 | GPIO_OTYPER_OT_9 | GPIO_OTYPER_OT_6 | GPIO_OTYPER_OT_7);
-  GPIOC->OSPEEDR &= ~(GPIO_OSPEEDR_OSPEEDR8 | GPIO_OSPEEDR_OSPEEDR9 | GPIO_OSPEEDR_OSPEEDR6 | GPIO_OSPEEDR_OSPEEDR7);
-  GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPDR8 | GPIO_PUPDR_PUPDR9 | GPIO_PUPDR_PUPDR6 | GPIO_PUPDR_PUPDR7);
-  GPIOC->AFR[0] |= GPIO_AFRL_AFRL0;
-  GPIOC->AFR[1] |= GPIO_AFRH_AFRH0;
-
-  GPIOC->ODR |= (GPIO_ODR_9);
+  while(1)
+  {
+    HAL_Delay(1000);
+    // ReceiveLED();
+    TransmitString("CMD?");
+  }
 }
 
 /** System Clock Configuration
