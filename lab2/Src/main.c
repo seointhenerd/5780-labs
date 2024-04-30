@@ -1,7 +1,7 @@
 /**
   *
-  * Brandon Mouser
-  * U0962682
+  * Seoin Kim
+  * u1324614
   *
   ******************************************************************************
   * File Name          : main.c
@@ -138,7 +138,7 @@ int main(void)
   while (1)
   {
     GPIOC->ODR ^= (1 << 6);
-    HAL_Delay(500); // Delay 120ms
+    HAL_Delay(500);
   }
   
 }
